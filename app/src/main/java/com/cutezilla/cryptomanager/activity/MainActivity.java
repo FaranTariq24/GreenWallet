@@ -98,8 +98,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         }
     }
 
-
-
     private void iniUiComponents() {
         baseActivity = new BaseActivity();
         cv_btn_sell =  (CardView) findViewById(R.id.btn_sell);
@@ -121,7 +119,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             }
         });
     }
-
 
     private void headerComponents() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -174,8 +171,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         sweetAlertDialog.show();
 
     }
-
-
 
     //Predefined code
     @Override
@@ -496,10 +491,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         return validated;
     }
 
-
-
-
-
     private void dialogDatePickerLight(final Button bt) {
         Calendar cur_calender = Calendar.getInstance();
 
@@ -548,13 +539,11 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         final EditText oldPassword = (EditText) dialog.findViewById(R.id.et_oldPassword);
         final EditText newPassword = (EditText) dialog.findViewById(R.id.et_newpassword);
         final EditText confirmPassword = (EditText) dialog.findViewById(R.id.confirmPassword);
-        final CircularImageView civ_profile = (CircularImageView) dialog.findViewById(R.id.civ_dialog_avatar);
+//        final CircularImageView civ_profile = (CircularImageView) dialog.findViewById(R.id.civ_dialog_avatar);
         final TextView tv_name = (TextView) dialog.findViewById(R.id.tv_name);
         final TextView tv_email = (TextView) dialog.findViewById(R.id.tv_email);
 
-//        if (!Common.userAccount.getGender().equals("Male")) {
-//            civ_profile.setImageResource(R.drawable.girl);
-//        }
+
         tv_name.setText(Common.userAccount.getName());
         tv_email.setText(Common.userAccount.getEmail());
 
