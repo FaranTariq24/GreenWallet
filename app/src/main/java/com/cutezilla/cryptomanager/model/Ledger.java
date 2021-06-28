@@ -2,12 +2,12 @@ package com.cutezilla.cryptomanager.model;
 
 public class Ledger {
     private String ledger_id,ledgerEntry_id, currency_name,time, description ;
-    private float highestBuyingPrice,lowestBuyingPrice,totalInvested;
+    private float highestBuyingPrice,lowestBuyingPrice,totalInvested,totalCryptoAmount;
 
     public Ledger() {
     }
 
-    public Ledger(String ledger_id, String ledgerEntry_id, String currency_name, String time, String description, float highestBuyingPrice, float lowestBuyingPrice, float totalInvested) {
+    public Ledger(String ledger_id, String ledgerEntry_id, String currency_name, String time, String description, float highestBuyingPrice, float lowestBuyingPrice, float totalInvested, float totalCryptoAmount) {
         this.ledger_id = ledger_id;
         this.ledgerEntry_id = ledgerEntry_id;
         this.currency_name = currency_name;
@@ -16,6 +16,7 @@ public class Ledger {
         this.highestBuyingPrice = highestBuyingPrice;
         this.lowestBuyingPrice = lowestBuyingPrice;
         this.totalInvested = totalInvested;
+        this.totalCryptoAmount = totalCryptoAmount;
     }
 
     public String getLedger_id() {
@@ -80,5 +81,13 @@ public class Ledger {
 
     public void setTotalInvested(float totalInvested) {
         this.totalInvested = totalInvested;
+    }
+
+    public float getTotalCryptoAmount() {
+        return totalCryptoAmount;
+    }
+
+    public void setTotalCryptoAmount(float totalCryptoAmount) {
+        this.totalCryptoAmount = totalCryptoAmount;
     }
 }

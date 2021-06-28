@@ -1,24 +1,20 @@
 package com.cutezilla.cryptomanager.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,53 +22,53 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.cutezilla.cryptomanager.Interface.ItemClickListener;
 import com.cutezilla.cryptomanager.R;
-import com.cutezilla.cryptomanager.adapter.CurrencyAdapter;
-import com.cutezilla.cryptomanager.adapter.MyCurrencyAdapter;
 import com.cutezilla.cryptomanager.model.Account;
 import com.cutezilla.cryptomanager.model.Currency;
 import com.cutezilla.cryptomanager.model.Ledger;
 import com.cutezilla.cryptomanager.model.LedgerBuyEntry;
 import com.cutezilla.cryptomanager.services.QueryService;
 import com.cutezilla.cryptomanager.util.Common;
+import com.cutezilla.cryptomanager.viewHolder.LedgerViewHolder;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.mikhaellopez.circularimageview.CircularImageView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import pl.utkala.searchablespinner.SearchableSpinner;
 
 public class MainActivity extends AppCompatActivity   implements NavigationView.OnNavigationItemSelectedListener{
-
+    Query mainCardQuery;
+    FirebaseRecyclerOptions<Ledger> FR_options;
+    static FirebaseRecyclerAdapter<Ledger, LedgerViewHolder> FR_adapter;
     LinearLayout  ll_header;
     FirebaseAuth mAuth;
     BaseActivity baseActivity;
@@ -82,6 +78,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     CardView cv_btn_buy, cv_btn_sell;
     LottieAnimationView ltv_loading;
     long date_ship_millis;
+    RecyclerView recyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +87,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
         iniUiComponents();
         headerComponents();
+
         ll_header.setVisibility(View.VISIBLE);
         navigationView.setNavigationItemSelectedListener(this);
         if (mAuth.getCurrentUser() != null) {
@@ -96,6 +95,46 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             Common.email = email;
             fetchNameAndGender(email);
         }
+        recyclerView = (RecyclerView) findViewById(R.id.rc_mainCard);
+        recyclerView.setHasFixedSize(true);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
+        recyclerView.setLayoutManager(gridLayoutManager);
+
+    }
+
+    private void loadMainCardItems() {
+        mainCardQuery = FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
+                .orderByChild("ledger_id").equalTo(Common.removeSpecialCharacter(Common.userAccount.getEmail()));
+        FR_options = new FirebaseRecyclerOptions.Builder<Ledger>()
+                .setQuery(mainCardQuery, Ledger.class)
+                .build();
+        FR_adapter = new FirebaseRecyclerAdapter<Ledger, LedgerViewHolder>(FR_options) {
+            @Override
+            protected void onBindViewHolder(@NonNull  LedgerViewHolder holder, int i, @NonNull Ledger ledger) {
+
+                holder.setViewData(ledger);
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position) {
+                        Toast.makeText(MainActivity.this,FR_adapter.getRef(position).getKey(),Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public LedgerViewHolder onCreateViewHolder(@NonNull  ViewGroup parent, int viewType) {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.main_small_card, parent, false);
+//                int height = parent.getMeasuredHeight() / 2;
+//                itemView.setMinimumHeight(height);
+                return new LedgerViewHolder(itemView);
+            }
+        };
+        FR_adapter.startListening();
+        recyclerView.setAdapter(FR_adapter);
+
+
     }
 
     private void iniUiComponents() {
@@ -314,6 +353,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         Calendar calendar;
         calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        final EditText etCryptoAmount = (EditText) dialog.findViewById(R.id.et_cryptoAmount);
         final Button buyDate = (Button) dialog.findViewById(R.id.et_buy_date);
         final SearchableSpinner currency = (SearchableSpinner) dialog.findViewById(R.id.ss_id);
         final EditText buyPrice = (EditText) dialog.findViewById(R.id.et_buyprice);
@@ -378,10 +418,11 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         ((AppCompatButton) dialog.findViewById(R.id.bt_submit)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount;
+                String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount,strCryptoAmount;
                 strBuyDate = buyDate.getText().toString();
                 strCurrency = currency.getSelectedItem().toString();
                 strBuyPrice = buyPrice.getText().toString();
+                strCryptoAmount = etCryptoAmount.getText().toString();
                 strInvestedAmount = investedAmount.getText().toString();
 
                 if(validateBuyLedgerData(strBuyDate,strCurrency,strBuyPrice,strInvestedAmount)){
@@ -390,6 +431,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                     LBE.setLedger_id(ledgerBuyId);
                     LBE.setBuyingDate(strBuyDate);
                     LBE.setCurrency(strCurrency);
+                    LBE.setCryptoAmount(Float.parseFloat(strCryptoAmount));
                     LBE.setBuyingPrice(Float.parseFloat(strBuyPrice));
                     LBE.setInvestedAmount(Float.parseFloat(strInvestedAmount));
 
@@ -422,6 +464,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                                             else if (ledger1.getLowestBuyingPrice()>LBE.getBuyingPrice()){
                                                                 ledger1.setLowestBuyingPrice(LBE.getBuyingPrice());
                                                             }
+                                                            ledger1.setTotalCryptoAmount(ledger1.getTotalCryptoAmount()+Float.parseFloat(strCryptoAmount));
                                                             ledger1.setTotalInvested(ledger1.getTotalInvested()+LBE.getInvestedAmount());
                                                             FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
                                                                 .child(ledgerBuyId)
@@ -445,7 +488,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                                 });
 
                                     }else{
-                                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy-hh-mm");
 
                                         ledger.setLedger_id(Common.removeSpecialCharacter(Common.userAccount.getEmail()));
                                         ledger.setLedgerEntry_id(ledgerBuyId);
@@ -454,6 +497,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                         ledger.setLowestBuyingPrice(Float.parseFloat(strBuyPrice));
                                         ledger.setTime(format.format(calendar.getTime()).toString());
                                         ledger.setTotalInvested(Float.parseFloat(strInvestedAmount));
+                                        ledger.setTotalCryptoAmount(Float.parseFloat(strCryptoAmount));
 
                                         FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
                                                 .child(ledgerBuyId)
@@ -657,6 +701,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                         ltv_loading.setVisibility(View.GONE);
                     }
                 }
+                loadMainCardItems();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().show();
