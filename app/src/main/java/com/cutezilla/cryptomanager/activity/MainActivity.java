@@ -287,10 +287,10 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                @Override
                                public void onComplete(@NonNull  Task<Void> task) {
                                    baseActivity.sucessDialog(MainActivity.this, "Currency added successful", "Currency", null);
+                                   dialog.dismiss();
                                }
                            });
 
-                   Toast.makeText(MainActivity.this,"Added new currency",Toast.LENGTH_SHORT);
                }
             }
         });
@@ -323,20 +323,37 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 //        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         buyDate.setText(format.format(calendar.getTime()));
 
-        ArrayList arrayList=new ArrayList<>();
+        ArrayList currencyList=new ArrayList<>();
 
         Query defaultCurrQ = queryService.getDefaultAndUserCurrency();
+        Query userCurrQ = queryService.getUserAddedCurrency();
         defaultCurrQ.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull  DataSnapshot dataSnapshot) {
                 for(DataSnapshot defaultCrr:dataSnapshot.getChildren()){
                     Currency  crr = defaultCrr.getValue(Currency.class);
                     if(crr!=null){
-                        arrayList.add(crr.getName());
+                        currencyList.add(crr.getName());
                     }
                 }
-                ArrayAdapter arrayAdapter=new ArrayAdapter(MainActivity.this, android.R.layout.simple_dropdown_item_1line, arrayList);
+                userCurrQ
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                                for(DataSnapshot userCrrSnap:snapshot.getChildren()){
+                                    Currency  userCrr = userCrrSnap.getValue(Currency.class);
+                                    if(userCrr!=null){
+                                        currencyList.add(userCrr.getName());
+                                    }
+                                }
+                            }
 
+                            @Override
+                            public void onCancelled(@NonNull  DatabaseError error) {
+
+                            }
+                        });
+                ArrayAdapter arrayAdapter=new ArrayAdapter(MainActivity.this, android.R.layout.simple_dropdown_item_1line, currencyList);
                 currency.setAdapter(arrayAdapter);
             }
 

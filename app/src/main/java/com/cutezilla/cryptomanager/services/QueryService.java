@@ -17,6 +17,13 @@ public class QueryService {
         query = FirebaseDatabase.getInstance().getReference(Common.STR_Currency)
                 .orderByChild("defaultCurrency")
                 .equalTo(true);
+
+        return query;
+    }
+    public Query getUserAddedCurrency(){
+        query = FirebaseDatabase.getInstance().getReference(Common.STR_Currency)
+                .orderByChild("currency_id")
+                .equalTo(Common.userAccount.getEmail());
         return query;
     }
     public Query getLedgerByLedgerId(String ledgerId){
