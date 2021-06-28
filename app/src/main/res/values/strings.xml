@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Crypto wallet</string>
+    <string name="title_activity_sign_in">SignInActivity</string>
+    <string name="title_activity_main_activty">MainActivty</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="my_dashboard">My Dashboard</string>
+    <string name="not_found">-N/F-</string>
+    <string name="image">Image</string>
+    <string name="users">Users</string>
+    <string name="bar_chart">Bar Chart</string>
+    <string name="linear_chart">Linear Chart</string>
+    <string name="devolping">Devolping</string>
+    <string name="title_activity_index">IndexActivity</string>
+
+
+    <string name="Dont_have_an_account_SignUp">Dont have an account  <u>SignUp</u>.</string>
+
+    <string name="email_sent_to">We have sent you instructions to reset your password at: </string>
+    <string name="email_sent">Email sent</string>
+    <string name="failed_email">Failed to send email. Your email might not be registered </string>
+    <string name="error">Error</string>
+</resources>

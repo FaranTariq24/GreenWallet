@@ -1,0 +1,278 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="space5">5dp</dimen>
+    <dimen name="space10">10dp</dimen>
+    <dimen name="space20">20dp</dimen>
+    <dimen name="space40">40dp</dimen>
+
+    <dimen name="txt10">10sp</dimen>
+    <dimen name="txt14">14sp</dimen>
+    <dimen name="txt16">16sp</dimen>
+    <dimen name="txt22">22sp</dimen>
+    <dimen name="txt30">30sp</dimen>
+    <dimen name="btn_height">50dp</dimen>
+    <dimen name="btn_width">250dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+
+
+    <!--genaral spacing-->
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_small">3dp</dimen>
+    <dimen name="spacing_medium">5dp</dimen>
+    <dimen name="spacing_xmedium">7dp</dimen>
+    <dimen name="spacing_middle">10dp</dimen>
+    <dimen name="spacing_large">15dp</dimen>
+    <dimen name="spacing_smlarge">18dp</dimen>
+    <dimen name="spacing_mlarge">20dp</dimen>
+    <dimen name="spacing_mxlarge">25dp</dimen>
+    <dimen name="spacing_xlarge">35dp</dimen>
+    <dimen name="spacing_xmlarge">40dp</dimen>
+    <dimen name="spacing_xxlarge">50dp</dimen>
+    <dimen name="spacing_xxxlarge">55dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
+
+
+    --------
+    <dimen name="qr_icon_height">30dp</dimen>
+    <dimen name="qr_icon_width">150dp</dimen>
+
+    <dimen name="dialogFpinHeight">340dp</dimen>
+    <dimen name="header_buttons_height">35dp</dimen>
+
+    <dimen name="header_other_buttons_width">28dp</dimen>
+    <dimen name="header_other_buttons_height">35dp</dimen>
+
+    <dimen name="tab_label">14sp</dimen>
+
+    <integer name="email_max_length">50</integer>
+    <dimen name="anim_bg_strips_width">110dp</dimen>
+    <dimen name="anim_bg_width">100dp</dimen>
+    <dimen name="anim_logo_width">45dp</dimen>
+
+    <dimen name="splashLogoTopMargin">175dp</dimen>
+    <dimen name="loginHeaderHeight">140dp</dimen>
+    <dimen name="headerHeadingMarginLeft">48dp</dimen>
+    <dimen name="headerLogoMarginRight">10dp</dimen>
+    <dimen name="headerLogoMarginTop">-50dp</dimen>
+
+    <dimen name="notificationItemHeight">90dp</dimen>
+    <dimen name="navDrawerItemHeight">50dp</dimen>
+    <dimen name="navDrawerImageHeight">80dp</dimen>
+    <dimen name="nav_drawer_item_margin_left">50dp</dimen>
+    <dimen name="nav_drawer_margin_right">0dp</dimen>
+
+    <dimen name="gridItemLogoTextMarginTop">0dp</dimen>
+    <dimen name="gridItemLogoTextMarginBottom">15dp</dimen>
+    <dimen name="gridItemPadding">5dp</dimen>
+
+    <dimen name="titleIndicatorTextPadding">5dp</dimen>
+    <dimen name="titleIndicatorTextSize">15dp</dimen>
+
+    <dimen name="activityMarginXXSmall">5dp</dimen>
+    <dimen name="activityMarginXSmall">10dp</dimen>
+    <dimen name="activityMarginSmall">16dp</dimen>
+    <dimen name="activityMarginNormal">20dp</dimen>
+
+    <dimen name="listItemPaddingNormal">10dp</dimen>
+
+    <dimen name="textViewTextXSizeSmall">9dp</dimen>
+    <dimen name="textViewTextSizeSmall">11dp</dimen>
+    <dimen name="textViewTextSizeNormal">14dp</dimen>
+    <dimen name="textViewTextSizeMedium">16dp</dimen>
+    <dimen name="textViewTextSizeLarge">18dp</dimen>
+    <dimen name="textViewTextSizeLarger">20dp</dimen>
+    <dimen name="textViewTextSizeXLarge">24sp</dimen>
+    <dimen name="textViewTextSizeXXXLarge">40dp</dimen>
+
+    <dimen name="textViewMarginXSmall">3dp</dimen>
+    <dimen name="textViewMarginSmall">5dp</dimen>
+    <dimen name="textViewMarginNormal">10dp</dimen>
+    <dimen name="textViewMarginLarge">15dp</dimen>
+    <dimen name="textViewMarginXLarge">20dp</dimen>
+    <dimen name="textViewMarginXXXLarge">30dp</dimen>
+
+    <dimen name="buttonTextSizeNormal">22dp</dimen>
+    <dimen name="buttonTopMargin">5dp</dimen>
+    <dimen name="buttonHeightNormal">50dp</dimen>
+    <dimen name="buttonHeightSmall">40dp</dimen>
+    <dimen name="buttonWidthSmall">110dp</dimen>
+    <dimen name="buttonWidthNormal">130dp</dimen>
+    <dimen name="buttonWidthLarge">140dp</dimen>
+    <dimen name="buttonWidthXLarge">200dp</dimen>
+    <dimen name="buttonSideMargin">15dp</dimen>
+    <dimen name="buttonSideMarginNormal">40dp</dimen>
+    <dimen name="buttonSideMarginLarge">50dp</dimen>
+    <dimen name="button_margin_top_xlarge">50dp</dimen>
+    <dimen name="button_margin_top_large">30dp</dimen>
+    <dimen name="button_margin_top_normal">20dp</dimen>
+    <dimen name="button_margin_top_small">8dp</dimen>
+    <dimen name="button_margin_bottom_normal">20dp</dimen>
+    <dimen name="button_margin_bottom_large">30dp</dimen>
+    <dimen name="button_width">200dp</dimen>
+    <dimen name="buttonLoginMargin">20dp</dimen>
+    <dimen name="sliderSkipButtonWidth">75dp</dimen>
+    <dimen name="buttonInnermargin">5dp</dimen>
+    <dimen name="buttonMinWidthNormal">160dp</dimen>
+
+    <dimen name="dialogPaddingMedium">15dp</dimen>
+    <dimen name="dialogPaddingLarge">20dp</dimen>
+    <dimen name="dialogPaddingXLarge">30dp</dimen>
+    <dimen name="dialogHeightLarge">300dp</dimen>
+    <dimen name="dialogHeaderHeightSmall">40dp</dimen>
+    <dimen name="dialogHeaderHeightNormal">50dp</dimen>
+    <dimen name="dialogMarginNormal">10dp</dimen>
+    <dimen name="dialogMarginLarge">15dp</dimen>
+    <dimen name="dialogScrollHeight">90dp</dimen>
+    <dimen name="dialogNotificationTopPadding">75dp</dimen>
+
+    <dimen name="bookmeGridItemHeight">230dp</dimen>
+    <dimen name="bookmeGridTitleHeight">60dp</dimen>
+    <dimen name="bookmeGridImageHeight">170dp</dimen>
+    <dimen name="busTicketingHeaderHeight">130dp</dimen>
+    <dimen name="busTicketingHeaderContactIconHeight">28dp</dimen>
+    <dimen name="movieTicketingHeaderHeight">140dp</dimen>
+    <dimen name="movieTicketingHeaderImageWidth">100dp</dimen>
+
+    <dimen name="imageWidthXSmall">18dp</dimen>
+    <dimen name="imageHeightXSmall">18dp</dimen>
+    <dimen name="imageWidthNormal">75dp</dimen>
+    <dimen name="imageHeightNormal">75dp</dimen>
+    <dimen name="imageHeightXXLarge">170dp</dimen>
+    <dimen name="imageMarginRightNormal">16dp</dimen>
+    <dimen name="imagePaddingNormal">5dp</dimen>
+
+    <dimen name="cardCornerRadius">2dp</dimen>
+    <dimen name="cardElevation">2dp</dimen>
+
+    <dimen name="toggleWidthNormal">85dp</dimen>
+    <dimen name="toggleHeightNormal">55dp</dimen>
+
+    <dimen name="textViewFieldMargin">4dp</dimen>
+
+    <dimen name="rounded_bg_corner">5dip</dimen>
+
+    <dimen name="editTextFieldTopMargin">15dp</dimen>
+    <dimen name="editTextFieldPadding">15dp</dimen>
+    <dimen name="editTextFieldVerticalStart">23dp</dimen>
+    <dimen name="editTextFieldSidePadding">10dp</dimen>
+
+    <dimen name="editTextFieldBottomNegativeMargin">-15dp</dimen>
+
+    <dimen name="headerTopPadding">10dp</dimen>
+    <dimen name="top_margin_normal">15dp</dimen>
+
+
+    <dimen name="dialogBranchLocatorHeight">150px</dimen>
+    <dimen name="dialogLocatorHeight">260dp</dimen>
+
+    <dimen name="screenBottomMargin">30dp</dimen>
+
+    <dimen name="scrollViewMarginLeftRight">5dp</dimen>
+
+    <dimen name="subheader_height">55dp</dimen>
+
+    <dimen name="margin_standard">16dp</dimen>
+    <dimen name="margin_standard_double">32dp</dimen>
+    <dimen name="margin_short">8dp</dimen>
+    <dimen name="margin_extra_short">4dp</dimen>
+
+    <dimen name="adHeigght">197dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="listItemTextWidth">150dp</dimen>
+    <dimen name="padding_small">12dp</dimen>
+    <dimen name="spacing">2dp</dimen>
+    <dimen name="margin_fifty">50dp</dimen>
+
+    <dimen name="margin_retail">25dp</dimen>
+
+    <dimen name="circularStrokeWidth">1dp</dimen>
+    <dimen name="circularHalf">16dp</dimen>
+
+    <dimen name="linkedCardPadding">8dp</dimen>
+    <dimen name="cardFragmentHeight">210dp</dimen>
+    <dimen name="cardFragmentMargin">25dp</dimen>
+    <dimen name="cardNegativeMargin">10dp</dimen>
+
+    <dimen name="statementHeaderPaddingTop">40dp</dimen>
+    <dimen name="statementHeaderPaddingLeft">70dp</dimen>
+    <dimen name="statementHeaderPaddingBottom">40dp</dimen>
+
+    <dimen name="trxPaddingVertical">5dp</dimen>
+    <dimen name="trxPaddingHorizontal">10dp</dimen>
+
+    <dimen name="accountPaddingNormal">10dp</dimen>
+
+    <dimen name="giftCardSideMargin">25dp</dimen>
+
+    <dimen name="listSideMargin">10dp</dimen>
+    <dimen name="listTopMargin">20dp</dimen>
+
+    <dimen name="fragmentTopMarginXlarge">50dp</dimen>
+    <dimen name="fragmentViewSmallMargin">6dp</dimen>
+    <dimen name="fragmentNormalMargin">10dp</dimen>
+
+    <dimen name="gridItemHeight">120dp</dimen>
+    <dimen name="gridItemImageWidth">78dp</dimen>
+
+    <dimen name="locatorPaddingNormal">15dp</dimen>
+    <dimen name="loyalty_mini_statement_left_right_margin">15dp</dimen>
+    <dimen name="sub_image_width_heigt">200dp</dimen>
+    <dimen name="margin_large">30dp</dimen>
+    <dimen name="brand_category_item_height">60dp</dimen>
+    <dimen name="promotionImageHeight">260dp</dimen>
+    <dimen name="register_tour_view_height">20dp</dimen>
+
+
+    <dimen name="layoutMarginSmall">10dp</dimen>
+    <dimen name="layoutMarginLarge">20dp</dimen>
+    <dimen name="layoutMarginXLarge">30dp</dimen>
+
+    <dimen name="history_icon_height">90dp</dimen>
+
+    <dimen name="custom_tab_layout_height">72dp</dimen>
+
+
+
+    <dimen name="fingerHeight">150dp</dimen>
+    <dimen name="finger_width">150dp</dimen>
+
+    <dimen name="right_thumb_margin_top">0dp</dimen>
+    <dimen name="right_thumb_margin_left">95dp</dimen>
+
+    <dimen name="right_index_margin_top">20dp</dimen>
+    <dimen name="right_index_margin_left">20dp</dimen>
+
+    <dimen name="right_middle_margin_top">60dp</dimen>
+    <dimen name="right_middle_margin_left">8dp</dimen>
+
+    <dimen name="right_ring_margin_top">95dp</dimen>
+    <dimen name="right_ring_margin_left">15dp</dimen>
+
+    <dimen name="right_little_margin_top">125dp</dimen>
+    <dimen name="right_little_margin_left">35dp</dimen>
+
+
+
+    <dimen name="left_thumb_margin_top">0dp</dimen>
+    <dimen name="left_thumb_margin_left">27dp</dimen>
+
+    <dimen name="left_index_margin_top">20dp</dimen>
+    <dimen name="left_index_margin_left">100dp</dimen>
+
+    <dimen name="left_middle_margin_top">60dp</dimen>
+    <dimen name="left_middle_margin_left">120dp</dimen>
+
+    <dimen name="left_ring_margin_top">95dp</dimen>
+    <dimen name="left_ring_margin_left">110dp</dimen>
+
+    <dimen name="left_little_margin_top">125dp</dimen>
+    <dimen name="left_little_margin_left">90dp</dimen>
+
+    <dimen name="finger_hight_width_small">20dp</dimen>
+    <dimen name="finger_hight_width_normal">25dp</dimen>
+    <dimen name="finger_hight_width_large">30dp</dimen>
+
+</resources>

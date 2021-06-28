@@ -1,0 +1,4 @@
+<vector android:height="@dimen/header_other_buttons_height" android:viewportHeight="146"
+    android:viewportWidth="116" android:width="@dimen/header_other_buttons_width" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#fff" android:name="Shape 2" android:pathData="m41.03 70.8 14.77 -15.34c1.07 -1.11 2.8 -1.11 3.87 0c1.07 1.11 1.07 2.91 0 4.02l-10.1 10.49h26.85c1.51 0 2.74 1.27 2.74 2.84c0 1.57 -1.22 2.84 -2.74 2.84h-26.85l10.1 10.49c1.07 1.11 1.07 2.91 0 4.02c-0.53 0.55 -1.23 0.83 -1.93 0.83c-0.7 0 -1.4 -0.28 -1.93 -0.83l-14.77 -15.34c-1.07 -1.11 -1.07 -2.91 0 -4.02z"/>
+</vector>

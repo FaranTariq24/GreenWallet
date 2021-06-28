@@ -1,0 +1,4 @@
+<vector android:height="@dimen/header_other_buttons_height" android:viewportHeight="146"
+    android:viewportWidth="116" android:width="@dimen/header_other_buttons_width" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#ffff" android:name="Rectangle 13" android:pathData="m27 55.01v6.73h61v-6.73zm0 15.13v6.73h61v-6.73zm0 15.13v6.73h61v-6.73z"/>
+</vector>

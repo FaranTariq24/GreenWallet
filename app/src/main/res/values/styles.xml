@@ -1,0 +1,51 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+
+        //green_400 colorPrimary
+        <item name="colorPrimary">@color/green_400</item>
+        //colorPrimaryDark
+        <item name="colorPrimaryDark">@color/green_500</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="MainPage" parent="Theme.AppCompat.Light.NoActionBar">
+        <!--<item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>-->
+        <!--<item name="colorPrimaryDark">@android:color/transparent</item>-->
+        <item name="colorPrimaryDark">@color/green_800</item>
+        <!--<item name="colorPrimaryDark">@color/skyblue</item>-->
+        <item name="colorPrimary">@color/lightPink</item>
+       
+    </style>
+    <style name="Toolbar.Light" parent="@style/AppTheme">
+        <item name="colorControlNormal">@color/grey_60</item>
+        <item name="android:textColorPrimary">@color/grey_60</item>
+    </style>
+    
+    <style name="MainActivity" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimaryDark">@color/skyblue</item>
+        <item name="colorPrimary">@color/lightPink</item>
+
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Button.Accent.Borderless.green" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/green_400</item>
+    </style>
+
+    <style name="Button.Accent.Borderless" parent="@style/Widget.AppCompat.Button.Borderless.Colored">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/colorActive</item>
+        <item name="colorControlActivated">@color/colorStand</item>
+    </style>
+
+</resources>
