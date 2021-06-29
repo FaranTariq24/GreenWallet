@@ -57,6 +57,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -353,7 +354,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         Calendar calendar;
         calendar = Calendar.getInstance();
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        final EditText etCryptoAmount = (EditText) dialog.findViewById(R.id.et_cryptoAmount);
         final Button buyDate = (Button) dialog.findViewById(R.id.et_buy_date);
         final SearchableSpinner currency = (SearchableSpinner) dialog.findViewById(R.id.ss_id);
         final EditText buyPrice = (EditText) dialog.findViewById(R.id.et_buyprice);
@@ -418,13 +418,18 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         ((AppCompatButton) dialog.findViewById(R.id.bt_submit)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (buyDate.getText().toString().equals("") || currency.getSelectedItem().toString().equals("")
+                ||buyPrice.getText().toString().equals("")||investedAmount.equals("")){
+                    Toast.makeText(MainActivity.this,"kindly provide the data",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                DecimalFormat percentageFormat = new DecimalFormat("00.0000");
                 String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount,strCryptoAmount;
                 strBuyDate = buyDate.getText().toString();
                 strCurrency = currency.getSelectedItem().toString();
                 strBuyPrice = buyPrice.getText().toString();
-                strCryptoAmount = etCryptoAmount.getText().toString();
                 strInvestedAmount = investedAmount.getText().toString();
-
+                strCryptoAmount = String.valueOf(percentageFormat.format(Float.parseFloat(strInvestedAmount)/Float.parseFloat(strBuyPrice)));
                 if(validateBuyLedgerData(strBuyDate,strCurrency,strBuyPrice,strInvestedAmount)){
                     LedgerBuyEntry LBE = new LedgerBuyEntry();
                     String ledgerBuyId = Common.createLedgerEntryId(strCurrency);
@@ -508,7 +513,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                                 dialog.dismiss();
                                             }
                                         });
-                                        Toast.makeText(MainActivity.this,"Ledger not Found",Toast.LENGTH_LONG).show();
+
                                     }
                                 }
 
