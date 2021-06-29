@@ -103,15 +103,28 @@
                                 android:text="Wallet Balance"
                                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
                                 android:textColor="@color/green_300" />
-
-                            <TextView
+                            <androidx.appcompat.widget.LinearLayoutCompat
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/tv_walletBalance"
-                                android:text="00.00"
-                                android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
-                                android:textColor="@android:color/black"
-                                app:fontFamily="sans-serif-medium" />
+                                android:orientation="horizontal"
+                                >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/tv_walletBalance"
+                                    android:text="00.00"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                                    android:textColor="@android:color/black"
+                                    app:fontFamily="sans-serif-medium" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="$"
+                                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                                    android:textColor="@android:color/black"
+                                    app:fontFamily="sans-serif-medium" />
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
 
                             <TextView
                                 android:layout_width="wrap_content"

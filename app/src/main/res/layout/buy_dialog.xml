@@ -118,7 +118,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buying Price">
+            android:text="Buying Price in $">
 
         </TextView>
 
@@ -166,7 +166,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Invested amount">
+            android:text="Invested amount in $">
 
         </TextView>
         <EditText
