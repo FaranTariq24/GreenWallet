@@ -27,7 +27,7 @@ import com.cutezilla.cryptomanager.R;
 import com.cutezilla.cryptomanager.model.Account;
 import com.cutezilla.cryptomanager.model.Currency;
 import com.cutezilla.cryptomanager.model.Ledger;
-import com.cutezilla.cryptomanager.model.LedgerBuyEntry;
+import com.cutezilla.cryptomanager.model.LedgerEntry;
 import com.cutezilla.cryptomanager.services.QueryService;
 import com.cutezilla.cryptomanager.util.Common;
 import com.cutezilla.cryptomanager.viewHolder.LedgerViewHolder;
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     CardView cv_btn_buy, cv_btn_sell;
     LottieAnimationView ltv_loading;
     long date_ship_millis;
+    TextView tv_walletBalance;
     RecyclerView recyclerView;
 
     @Override
@@ -114,10 +115,13 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             protected void onBindViewHolder(@NonNull  LedgerViewHolder holder, int i, @NonNull Ledger ledger) {
 
                 holder.setViewData(ledger);
+                tv_walletBalance.setText(String.valueOf(ledger.getTotalInvested()+Float.parseFloat(tv_walletBalance.getText().toString())));
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        Toast.makeText(MainActivity.this,FR_adapter.getRef(position).getKey(),Toast.LENGTH_LONG).show();
+                        Common.SELECTED_CURRENCY = FR_adapter.getRef(position).getKey();
+                        Intent intent = new Intent(MainActivity.this,HistoryActivity.class);
+                        startActivity(intent);
                     }
                 });
             }
@@ -139,12 +143,14 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     }
 
     private void iniUiComponents() {
+        tv_walletBalance = (TextView) findViewById(R.id.tv_walletBalance);
         baseActivity = new BaseActivity();
         cv_btn_sell =  (CardView) findViewById(R.id.btn_sell);
         cv_btn_buy = (CardView) findViewById(R.id.btn_buy);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         ltv_loading = (LottieAnimationView) findViewById(R.id.lav_loading);
         mAuth = FirebaseAuth.getInstance();
+
         cv_btn_buy.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -353,7 +359,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
         Calendar calendar;
         calendar = Calendar.getInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy-hh-mm");
         final Button buyDate = (Button) dialog.findViewById(R.id.et_buy_date);
         final SearchableSpinner currency = (SearchableSpinner) dialog.findViewById(R.id.ss_id);
         final EditText buyPrice = (EditText) dialog.findViewById(R.id.et_buyprice);
@@ -431,17 +437,18 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 strInvestedAmount = investedAmount.getText().toString();
                 strCryptoAmount = String.valueOf(percentageFormat.format(Float.parseFloat(strInvestedAmount)/Float.parseFloat(strBuyPrice)));
                 if(validateBuyLedgerData(strBuyDate,strCurrency,strBuyPrice,strInvestedAmount)){
-                    LedgerBuyEntry LBE = new LedgerBuyEntry();
+                    LedgerEntry LBE = new LedgerEntry();
                     String ledgerBuyId = Common.createLedgerEntryId(strCurrency);
                     LBE.setLedger_id(ledgerBuyId);
-                    LBE.setBuyingDate(strBuyDate);
+                    LBE.setDate(strBuyDate);
                     LBE.setCurrency(strCurrency);
                     LBE.setCryptoAmount(Float.parseFloat(strCryptoAmount));
-                    LBE.setBuyingPrice(Float.parseFloat(strBuyPrice));
+                    LBE.setPrice(Float.parseFloat(strBuyPrice));
                     LBE.setInvestedAmount(Float.parseFloat(strInvestedAmount));
+                    LBE.setStatus(Common.STR_BUY);
 
-                    FirebaseDatabase.getInstance().getReference(Common.STR_LedgerBuy)
-                            .child(Objects.requireNonNull(FirebaseDatabase.getInstance().getReference(Common.STR_LedgerBuy).push().getKey()))
+                    FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
+                            .child(Objects.requireNonNull(FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry).push().getKey()))
                             .setValue(LBE).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
@@ -463,11 +470,11 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                                             ledger1 = dataSnapshot1.getValue(Ledger.class);
                                                         }
                                                         if(ledger1!=null){
-                                                            if (ledger1.getHighestBuyingPrice()<LBE.getBuyingPrice()){
-                                                                ledger1.setHighestBuyingPrice(LBE.getBuyingPrice());
+                                                            if (ledger1.getHighestBuyingPrice()<LBE.getPrice()){
+                                                                ledger1.setHighestBuyingPrice(LBE.getPrice());
                                                             }
-                                                            else if (ledger1.getLowestBuyingPrice()>LBE.getBuyingPrice()){
-                                                                ledger1.setLowestBuyingPrice(LBE.getBuyingPrice());
+                                                            else if (ledger1.getLowestBuyingPrice()>LBE.getPrice()){
+                                                                ledger1.setLowestBuyingPrice(LBE.getPrice());
                                                             }
                                                             ledger1.setTotalCryptoAmount(ledger1.getTotalCryptoAmount()+Float.parseFloat(strCryptoAmount));
                                                             ledger1.setTotalInvested(ledger1.getTotalInvested()+LBE.getInvestedAmount());
@@ -493,7 +500,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                                 });
 
                                     }else{
-                                        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy-hh-mm");
+
 
                                         ledger.setLedger_id(Common.removeSpecialCharacter(Common.userAccount.getEmail()));
                                         ledger.setLedgerEntry_id(ledgerBuyId);

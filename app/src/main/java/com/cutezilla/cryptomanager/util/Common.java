@@ -11,9 +11,12 @@ public class Common {
     public static final String STR_EMAIL = "email";
     public static final String STR_Account = "accounts";
     public static final String STR_Currency = "currencys";
-    public static final String STR_LedgerBuy = "ledgerBuyEntry";
+    public static final String STR_LedgerEntry = "ledgerEntry";
     public static final String STR_Ledger = "ledger";
     public static String email;
+    public static final String STR_BUY ="BUY";
+    public static final String STR_SELL ="SELL";
+    public static  String SELECTED_CURRENCY ;
 
 
 

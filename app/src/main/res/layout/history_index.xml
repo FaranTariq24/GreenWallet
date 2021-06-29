@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/green_400"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/green_400"
+            app:elevation="0dp">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_large" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/spacing_large"
+            android:paddingRight="@dimen/spacing_large">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="6dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/spacing_middle" />
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="USD"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/green_300" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tv_inv_amount"
+                            android:text="00.00"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                            android:textColor="@android:color/black"
+                            app:fontFamily="sans-serif-medium" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Display1"
+                            android:textColor="@android:color/black"
+                            app:fontFamily="sans-serif-medium" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+                    <TextView
+                        android:id="@+id/tv_crr_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="BNB/USDT"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/grey_40" />
+
+                    <TextView
+
+                        android:id="@+id/tv_walletBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Subhead"
+                        android:textColor="@color/Black" />
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/spacing_mxlarge" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_small" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/spacing_large" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_gradient_very_soft" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_hsCard"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/spacing_large"
+        android:scrollbars="none"
+
+        android:scrollingCache="false"
+        android:padding="10dp"
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:background="@color/White"
+        android:visibility="gone"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="loading.json"
+        app:lottie_loop="true" />
+
+</LinearLayout>

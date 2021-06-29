@@ -1,19 +1,27 @@
 package com.cutezilla.cryptomanager.model;
 
-public class LedgerBuyEntry {
-    private String ledger_id, buyingDate, currency;
-    private float investedAmount, buyingPrice, cryptoAmount;
+public class LedgerEntry {
+    private String ledger_id, date, currency,status;
+    private float investedAmount, price, cryptoAmount;
 
-    public LedgerBuyEntry() {
+    public LedgerEntry() {
     }
 
-    public LedgerBuyEntry(String ledger_id, String buyingDate, String currency, float investedAmount, float buyingPrice, float cryptoAmount) {
+    public LedgerEntry(String ledger_id, String date, String currency, float investedAmount, float buyingPrice, float cryptoAmount, String bought) {
         this.ledger_id = ledger_id;
-        this.buyingDate = buyingDate;
+        this.date = date;
         this.currency = currency;
         this.investedAmount = investedAmount;
-        this.buyingPrice = buyingPrice;
+        this.price = buyingPrice;
         this.cryptoAmount = cryptoAmount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getLedger_id() {
@@ -24,12 +32,12 @@ public class LedgerBuyEntry {
         this.ledger_id = ledger_id;
     }
 
-    public String getBuyingDate() {
-        return buyingDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setBuyingDate(String buyingDate) {
-        this.buyingDate = buyingDate;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getCurrency() {
@@ -48,12 +56,12 @@ public class LedgerBuyEntry {
         this.investedAmount = investedAmount;
     }
 
-    public float getBuyingPrice() {
-        return buyingPrice;
+    public float getPrice() {
+        return price;
     }
 
-    public void setBuyingPrice(float buyingPrice) {
-        this.buyingPrice = buyingPrice;
+    public void setPrice(float price) {
+        this.price = price;
     }
 
     public float getCryptoAmount() {
