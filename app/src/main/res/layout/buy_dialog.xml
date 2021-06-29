@@ -7,6 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/lv_head"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -118,7 +119,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Buying Price in $">
+            android:text="Currency Price in $">
 
         </TextView>
 
@@ -163,12 +164,29 @@
         android:layout_weight="1"
         android:orientation="vertical"
         android:padding="@dimen/spacing_large">
-        <TextView
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Invested amount in $">
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_iv_des_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Invested amount in $">
 
-        </TextView>
+            </TextView>
+            <TextView
+                android:id="@+id/tv_iv_des_sell"
+                android:textColor="@color/Red"
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:text="available amount: 31$">
+
+            </TextView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
         <EditText
             android:id="@+id/et_investedamount"
             android:layout_width="match_parent"

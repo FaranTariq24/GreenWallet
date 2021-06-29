@@ -3,8 +3,11 @@ package com.cutezilla.cryptomanager.activity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -51,6 +55,7 @@ import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -61,6 +66,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -105,6 +111,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     }
 
     private void loadMainCardItems() {
+
         mainCardQuery = FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
                 .orderByChild("ledger_id").equalTo(Common.removeSpecialCharacter(Common.userAccount.getEmail()));
         FR_options = new FirebaseRecyclerOptions.Builder<Ledger>()
@@ -113,7 +120,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         FR_adapter = new FirebaseRecyclerAdapter<Ledger, LedgerViewHolder>(FR_options) {
             @Override
             protected void onBindViewHolder(@NonNull  LedgerViewHolder holder, int i, @NonNull Ledger ledger) {
-
+                Common.LEDG_LIST.add(ledger);
                 holder.setViewData(ledger);
                 tv_walletBalance.setText(String.valueOf(ledger.getTotalInvested()+Float.parseFloat(tv_walletBalance.getText().toString())));
                 holder.setItemClickListener(new ItemClickListener() {
@@ -155,13 +162,14 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             @Override
             public void onClick(View v) {
                 Log.i(Common.LOGTRACE, this.getClass()+ " Buy clicked " );
-                showBuyPopup();
+                showLedgerEntryPopup(true);
             }
         });
         cv_btn_sell.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Log.i(Common.LOGTRACE, this.getClass()+ " Sell clicked " );
+                showLedgerEntryPopup(false);
             }
         });
     }
@@ -345,7 +353,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         dialog.getWindow().setAttributes(lp);
     }
 
-    private void showBuyPopup(){
+    private void showLedgerEntryPopup(boolean buyStatus){
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // before
         dialog.setContentView(R.layout.buy_dialog);
@@ -364,6 +372,18 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         final SearchableSpinner currency = (SearchableSpinner) dialog.findViewById(R.id.ss_id);
         final EditText buyPrice = (EditText) dialog.findViewById(R.id.et_buyprice);
         final EditText investedAmount = (EditText) dialog.findViewById(R.id.et_investedamount);
+        final LinearLayout lv_head = (LinearLayout) dialog.findViewById(R.id.lv_head);
+        final TextView tv_name = (TextView) dialog.findViewById(R.id.tv_name);
+        final TextView tv_iv_des_sell = (TextView) dialog.findViewById(R.id.tv_iv_des_sell);
+        final TextView tv_iv_des_buy = (TextView) dialog.findViewById(R.id.tv_iv_des_buy);
+        if (buyStatus){
+            tv_name.setText(Common.STR_BUY);
+        }else{
+            tv_iv_des_sell.setVisibility(View.VISIBLE);
+            tv_iv_des_buy.setVisibility(View.GONE);
+            tv_name.setText(Common.STR_SELL);
+            lv_head.setBackgroundColor(Color.parseColor("#E53935"));
+        }
         buyPrice.requestFocus();
 
 //        ((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -373,6 +393,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
         Query defaultCurrQ = queryService.getDefaultAndUserCurrency();
         Query userCurrQ = queryService.getUserAddedCurrency();
+        List<Currency> crrList = new ArrayList<>();
+
         defaultCurrQ.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull  DataSnapshot dataSnapshot) {
@@ -380,6 +402,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                     Currency  crr = defaultCrr.getValue(Currency.class);
                     if(crr!=null){
                         currencyList.add(crr.getName());
+                        crrList.add(crr);
                     }
                 }
                 userCurrQ
@@ -390,6 +413,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                     Currency  userCrr = userCrrSnap.getValue(Currency.class);
                                     if(userCrr!=null){
                                         currencyList.add(userCrr.getName());
+                                        crrList.add(userCrr);
                                     }
                                 }
                             }
@@ -401,14 +425,56 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                         });
                 ArrayAdapter arrayAdapter=new ArrayAdapter(MainActivity.this, android.R.layout.simple_dropdown_item_1line, currencyList);
                 currency.setAdapter(arrayAdapter);
-            }
+                currency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        if (!Common.LEDG_LIST.isEmpty()&&!buyStatus){
+                            for (Ledger ld: Common.LEDG_LIST){
+                                if (ld.getCurrency_name().equals(currencyList.get(position))){
+                                    Common.STR_SELECTED_LEDGER_SELL = ld;
+                                    tv_iv_des_sell.setText("Available amount: "+String.valueOf(ld.getTotalInvested())+" $ ");
+//                                    Toast.makeText(MainActivity.this,String.valueOf(ld.getTotalInvested()),Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    }
 
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+            }
             @Override
             public void onCancelled(@NonNull  DatabaseError error) {
                 Toast.makeText(MainActivity.this,"Failed to load curr",Toast.LENGTH_SHORT);
+
+
             }
         });
+        if (!buyStatus){
+        buyPrice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Toast.makeText(MainActivity.this,s,Toast.LENGTH_SHORT).show();
+                if (!s.toString().equals("")){
+                    String cake = String.valueOf(Common.STR_SELECTED_LEDGER_SELL.getTotalInvested()/Float.parseFloat(s.toString()));
+                    String dollar = String.valueOf(Common.STR_SELECTED_LEDGER_SELL.getTotalCryptoAmount()*Float.parseFloat(s.toString()));
+                    tv_iv_des_sell.setText("Available USD: "+dollar+"$");
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });}
         buyDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -445,7 +511,12 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                     LBE.setCryptoAmount(Float.parseFloat(strCryptoAmount));
                     LBE.setPrice(Float.parseFloat(strBuyPrice));
                     LBE.setInvestedAmount(Float.parseFloat(strInvestedAmount));
-                    LBE.setStatus(Common.STR_BUY);
+                    if (buyStatus){
+                        LBE.setStatus(Common.STR_BUY);
+                    }else{
+                        LBE.setStatus(Common.STR_SELL);
+                    }
+
 
                     FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
                             .child(Objects.requireNonNull(FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry).push().getKey()))
@@ -470,14 +541,21 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                                             ledger1 = dataSnapshot1.getValue(Ledger.class);
                                                         }
                                                         if(ledger1!=null){
-                                                            if (ledger1.getHighestBuyingPrice()<LBE.getPrice()){
-                                                                ledger1.setHighestBuyingPrice(LBE.getPrice());
+
+                                                            if (buyStatus){
+                                                                ledger1.setTotalCryptoAmount(ledger1.getTotalCryptoAmount()+Float.parseFloat(strCryptoAmount));
+                                                                ledger1.setTotalInvested(ledger1.getTotalInvested()+LBE.getInvestedAmount());
+                                                                if (ledger1.getHighestBuyingPrice()<LBE.getPrice()){
+                                                                    ledger1.setHighestBuyingPrice(LBE.getPrice());
+                                                                }
+                                                                else if (ledger1.getLowestBuyingPrice()>LBE.getPrice()){
+                                                                    ledger1.setLowestBuyingPrice(LBE.getPrice());
+                                                                }
+                                                            }else{
+                                                                ledger1.setTotalCryptoAmount(ledger1.getTotalCryptoAmount()-Float.parseFloat(strCryptoAmount));
+                                                                ledger1.setTotalInvested(ledger1.getTotalInvested()-LBE.getInvestedAmount());
                                                             }
-                                                            else if (ledger1.getLowestBuyingPrice()>LBE.getPrice()){
-                                                                ledger1.setLowestBuyingPrice(LBE.getPrice());
-                                                            }
-                                                            ledger1.setTotalCryptoAmount(ledger1.getTotalCryptoAmount()+Float.parseFloat(strCryptoAmount));
-                                                            ledger1.setTotalInvested(ledger1.getTotalInvested()+LBE.getInvestedAmount());
+
                                                             FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
                                                                 .child(ledgerBuyId)
                                                                     .setValue(ledger1).addOnCompleteListener(new OnCompleteListener<Void>() {

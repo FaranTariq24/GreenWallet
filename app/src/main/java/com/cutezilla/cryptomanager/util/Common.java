@@ -3,6 +3,10 @@ package com.cutezilla.cryptomanager.util;
 import android.util.Patterns;
 
 import com.cutezilla.cryptomanager.model.Account;
+import com.cutezilla.cryptomanager.model.Ledger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Common {
 
@@ -18,6 +22,9 @@ public class Common {
     public static final String STR_SELL ="SELL";
     public static  String SELECTED_CURRENCY ;
 
+    public static Ledger STR_SELECTED_LEDGER_SELL;
+
+    public static List<Ledger> LEDG_LIST = new ArrayList<>();
 
 
 
