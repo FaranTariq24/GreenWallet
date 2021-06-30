@@ -23,6 +23,7 @@ public class Common {
     public static  String SELECTED_CURRENCY ;
 
     public static Ledger STR_SELECTED_LEDGER_SELL;
+    public  static Ledger STR_SELECTED_LEDGER_INT;
 
     public static List<Ledger> LEDG_LIST = new ArrayList<>();
 

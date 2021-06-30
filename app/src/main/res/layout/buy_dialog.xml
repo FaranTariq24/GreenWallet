@@ -187,15 +187,35 @@
             </TextView>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <EditText
-            android:id="@+id/et_investedamount"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/grey_3"
-            android:gravity="top"
-            android:inputType="numberDecimal"
-            android:hint="Invested amount"
-            android:padding="@dimen/spacing_middle" />
+            android:weightSum="4"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/et_investedamount"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="match_parent"
+                android:background="@color/grey_3"
+                android:gravity="top"
+                android:inputType="numberDecimal"
+                android:hint="Invested amount"
+                android:padding="@dimen/spacing_middle" />
+            <Button
+                android:id="@+id/bt_max_btn"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:paddingBottom="15px"
+                android:layout_marginLeft="5px"
+                android:textColor="@color/green_600"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Max">
+            </Button>
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

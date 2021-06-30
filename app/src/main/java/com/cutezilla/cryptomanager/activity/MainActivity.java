@@ -87,6 +87,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     long date_ship_millis;
     TextView tv_walletBalance;
     RecyclerView recyclerView;
+    DecimalFormat percentageFormat = new DecimalFormat("00.0000");
+    DecimalFormat percentageFormatD = new DecimalFormat("00.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,11 +124,12 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             protected void onBindViewHolder(@NonNull  LedgerViewHolder holder, int i, @NonNull Ledger ledger) {
                 Common.LEDG_LIST.add(ledger);
                 holder.setViewData(ledger);
-                tv_walletBalance.setText(String.valueOf(ledger.getTotalInvested()+Float.parseFloat(tv_walletBalance.getText().toString())));
+                tv_walletBalance.setText(String.valueOf(percentageFormatD.format(ledger.getTotalInvested()+Float.parseFloat(tv_walletBalance.getText().toString()))));
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
                         Common.SELECTED_CURRENCY = FR_adapter.getRef(position).getKey();
+                        Common.STR_SELECTED_LEDGER_INT = FR_adapter.getItem(position);
                         Intent intent = new Intent(MainActivity.this,HistoryActivity.class);
                         startActivity(intent);
                     }
@@ -150,6 +153,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     }
 
     private void iniUiComponents() {
+
         tv_walletBalance = (TextView) findViewById(R.id.tv_walletBalance);
         baseActivity = new BaseActivity();
         cv_btn_sell =  (CardView) findViewById(R.id.btn_sell);
@@ -376,9 +380,11 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         final TextView tv_name = (TextView) dialog.findViewById(R.id.tv_name);
         final TextView tv_iv_des_sell = (TextView) dialog.findViewById(R.id.tv_iv_des_sell);
         final TextView tv_iv_des_buy = (TextView) dialog.findViewById(R.id.tv_iv_des_buy);
+        final Button  bt_max_btn = (Button) dialog.findViewById(R.id.bt_max_btn);
         if (buyStatus){
             tv_name.setText(Common.STR_BUY);
         }else{
+            bt_max_btn.setVisibility(View.VISIBLE);
             tv_iv_des_sell.setVisibility(View.VISIBLE);
             tv_iv_des_buy.setVisibility(View.GONE);
             tv_name.setText(Common.STR_SELL);
@@ -426,13 +432,14 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 ArrayAdapter arrayAdapter=new ArrayAdapter(MainActivity.this, android.R.layout.simple_dropdown_item_1line, currencyList);
                 currency.setAdapter(arrayAdapter);
                 currency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         if (!Common.LEDG_LIST.isEmpty()&&!buyStatus){
                             for (Ledger ld: Common.LEDG_LIST){
                                 if (ld.getCurrency_name().equals(currencyList.get(position))){
                                     Common.STR_SELECTED_LEDGER_SELL = ld;
-                                    tv_iv_des_sell.setText("Available amount: "+String.valueOf(ld.getTotalInvested())+" $ ");
+                                    tv_iv_des_sell.setText("Available amount: "+percentageFormatD.format(ld.getTotalInvested())+" $ ");
 //                                    Toast.makeText(MainActivity.this,String.valueOf(ld.getTotalInvested()),Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -453,6 +460,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             }
         });
         if (!buyStatus){
+
         buyPrice.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -461,10 +469,10 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Toast.makeText(MainActivity.this,s,Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this,s,Toast.LENGTH_SHORT).show();
                 if (!s.toString().equals("")){
                     String cake = String.valueOf(Common.STR_SELECTED_LEDGER_SELL.getTotalInvested()/Float.parseFloat(s.toString()));
-                    String dollar = String.valueOf(Common.STR_SELECTED_LEDGER_SELL.getTotalCryptoAmount()*Float.parseFloat(s.toString()));
+                    String dollar = String.valueOf(percentageFormatD.format(Common.STR_SELECTED_LEDGER_SELL.getTotalCryptoAmount()*Float.parseFloat(s.toString())));
                     tv_iv_des_sell.setText("Available USD: "+dollar+"$");
                 }
 
@@ -495,7 +503,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                     Toast.makeText(MainActivity.this,"kindly provide the data",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                DecimalFormat percentageFormat = new DecimalFormat("00.0000");
+
                 String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount,strCryptoAmount;
                 strBuyDate = buyDate.getText().toString();
                 strCurrency = currency.getSelectedItem().toString();

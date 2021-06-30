@@ -33,6 +33,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -41,6 +43,8 @@ public class HistoryActivity extends AppCompatActivity {
     static FirebaseRecyclerAdapter<LedgerEntry, LedgerEntryViewHolder> FR_adapter;
     RecyclerView recyclerView;
     TextView tv_crr_name,tv_walletBalance,tv_inv_amount;
+    DecimalFormat percentageFormat = new DecimalFormat("00.0000");
+    DecimalFormat percentageFormatD = new DecimalFormat("00.00");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,12 @@ public class HistoryActivity extends AppCompatActivity {
         initUiComponent();
         loadCardItem();
         headerComponents();
+        populateUiComponent();
+    }
+
+    private void populateUiComponent() {
+        tv_inv_amount.setText(String.valueOf(percentageFormatD.format(Common.STR_SELECTED_LEDGER_INT.getTotalInvested())));
+        tv_walletBalance.setText(String.valueOf(percentageFormat.format(Common.STR_SELECTED_LEDGER_INT.getTotalCryptoAmount())));
     }
 
     private void initUiComponent() {
@@ -143,14 +153,14 @@ public class HistoryActivity extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull LedgerEntryViewHolder holder, int i, @NonNull LedgerEntry ledgerEntry) {
                 holder.setViewData(ledgerEntry);
-                if (ledgerEntry.getStatus().equals(Common.STR_BUY)){
-                    tv_walletBalance.setText( String.valueOf(Float.parseFloat(tv_walletBalance.getText().toString())+ ledgerEntry.getCryptoAmount()));
-                    tv_inv_amount.setText(String.valueOf(Float.parseFloat(tv_inv_amount.getText().toString())+ledgerEntry.getInvestedAmount()));
-                }else{
-                    float walletb = Float.parseFloat(tv_walletBalance.getText().toString())- ledgerEntry.getCryptoAmount();
-                    tv_walletBalance.setText( String.valueOf(walletb));
-                    tv_inv_amount.setText(String.valueOf(walletb*ledgerEntry.getPrice()));
-                }
+//                if (ledgerEntry.getStatus().equals(Common.STR_BUY)){
+//                    tv_walletBalance.setText( String.valueOf(Float.parseFloat(tv_walletBalance.getText().toString())+ ledgerEntry.getCryptoAmount()));
+//                    tv_inv_amount.setText(String.valueOf(Float.parseFloat(tv_inv_amount.getText().toString())+ledgerEntry.getInvestedAmount()));
+//                }else{
+//                    float walletb = Float.parseFloat(tv_walletBalance.getText().toString())- ledgerEntry.getCryptoAmount();
+//                    tv_walletBalance.setText( String.valueOf(walletb));
+//                    tv_inv_amount.setText(String.valueOf(walletb*ledgerEntry.getPrice()));
+//                }
 
                 tv_crr_name.setText(ledgerEntry.getCurrency());
                 holder.setItemClickListener(new ItemClickListener() {
