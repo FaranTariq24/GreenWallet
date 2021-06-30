@@ -552,8 +552,9 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                                                     ledger1.setLowestBuyingPrice(LBE.getPrice());
                                                                 }
                                                             }else{
-                                                                ledger1.setTotalCryptoAmount(ledger1.getTotalCryptoAmount()-Float.parseFloat(strCryptoAmount));
-                                                                ledger1.setTotalInvested(ledger1.getTotalInvested()-LBE.getInvestedAmount());
+                                                                float cryptAm = ledger1.getTotalCryptoAmount()-Float.parseFloat(strCryptoAmount);
+                                                                ledger1.setTotalCryptoAmount(cryptAm);
+                                                                ledger1.setTotalInvested(cryptAm*LBE.getPrice());
                                                             }
 
                                                             FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
@@ -564,6 +565,10 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                                                                     if (task.isComplete()) {
                                                                         baseActivity.sucessDialog(MainActivity.this, "Ledger entry added", "BUY", null);
                                                                         dialog.dismiss();
+                                                                        if (!buyStatus){
+                                                                           finish();
+                                                                           startActivity(getIntent());
+                                                                        }
                                                                     }
                                                                 }
                                                             });

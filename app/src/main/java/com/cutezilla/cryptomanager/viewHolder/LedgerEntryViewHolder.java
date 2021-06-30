@@ -16,7 +16,7 @@ import com.cutezilla.cryptomanager.util.Common;
 public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     ItemClickListener itemClickListener;
     View view;
-    TextView status,time,maxBuy,minBuy,totalCur,totalInvested,tv_buy_price;
+    TextView status,time,maxBuy,minBuy,totalCur,totalInvested,tv_buy_price,bbAt;
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
@@ -31,6 +31,7 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
         totalCur = (TextView) itemView.findViewById(R.id.tv_currencyAmount);
         totalInvested = (TextView) itemView.findViewById(R.id.tv_total_investedAmount);
         tv_buy_price = (TextView) itemView.findViewById(R.id.tv_buy_price);
+        bbAt = (TextView) itemView.findViewById(R.id.bbAt);
     }
 
     @Override
@@ -46,6 +47,11 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
         totalInvested.setText(String.valueOf(ledgerEntry.getInvestedAmount())+"$");
         tv_buy_price.setText(String.valueOf(ledgerEntry.getPrice()));
         if (ledgerEntry.getStatus().equals(Common.STR_SELL)){
+            status.setTextColor(Color.parseColor("#E53935"));
+            bbAt.setText("Sold at: ");
+            tv_buy_price.setTextColor(Color.parseColor("#E53935"));
+            bbAt.setTextColor(Color.parseColor("#E53935"));
+            totalCur.setTextColor(Color.parseColor("#E53935"));
             view.setBackgroundColor(Color.parseColor("#E53935"));
         }
 

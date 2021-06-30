@@ -59,6 +59,7 @@ public class HistoryActivity extends AppCompatActivity {
         tv_crr_name = (TextView) findViewById(R.id.tv_crr_name);
         recyclerView = (RecyclerView) findViewById(R.id.rc_hsCard);
         recyclerView.setHasFixedSize(true);
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(gridLayoutManager);
     }
@@ -146,8 +147,9 @@ public class HistoryActivity extends AppCompatActivity {
                     tv_walletBalance.setText( String.valueOf(Float.parseFloat(tv_walletBalance.getText().toString())+ ledgerEntry.getCryptoAmount()));
                     tv_inv_amount.setText(String.valueOf(Float.parseFloat(tv_inv_amount.getText().toString())+ledgerEntry.getInvestedAmount()));
                 }else{
-                    tv_walletBalance.setText( String.valueOf(Float.parseFloat(tv_walletBalance.getText().toString())- ledgerEntry.getCryptoAmount()));
-                    tv_inv_amount.setText(String.valueOf(Float.parseFloat(tv_inv_amount.getText().toString())-ledgerEntry.getInvestedAmount()));
+                    float walletb = Float.parseFloat(tv_walletBalance.getText().toString())- ledgerEntry.getCryptoAmount();
+                    tv_walletBalance.setText( String.valueOf(walletb));
+                    tv_inv_amount.setText(String.valueOf(walletb*ledgerEntry.getPrice()));
                 }
 
                 tv_crr_name.setText(ledgerEntry.getCurrency());
@@ -161,6 +163,5 @@ public class HistoryActivity extends AppCompatActivity {
         };
         FR_adapter.startListening();
         recyclerView.setAdapter(FR_adapter);
-
     }
 }
