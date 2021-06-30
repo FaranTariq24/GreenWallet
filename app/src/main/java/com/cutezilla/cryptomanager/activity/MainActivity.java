@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     CardView cv_btn_buy, cv_btn_sell;
     LottieAnimationView ltv_loading;
     long date_ship_millis;
-    TextView tv_walletBalance;
+    TextView tv_walletBalance,tv_wl_am_pkr;
     RecyclerView recyclerView;
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
     DecimalFormat percentageFormatD = new DecimalFormat("00.00");
@@ -124,7 +124,9 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             protected void onBindViewHolder(@NonNull  LedgerViewHolder holder, int i, @NonNull Ledger ledger) {
                 Common.LEDG_LIST.add(ledger);
                 holder.setViewData(ledger);
-                tv_walletBalance.setText(String.valueOf(percentageFormatD.format(ledger.getTotalInvested()+Float.parseFloat(tv_walletBalance.getText().toString()))));
+                String dollar = percentageFormatD.format(ledger.getTotalInvested()+Float.parseFloat(tv_walletBalance.getText().toString()));
+                tv_walletBalance.setText(dollar);
+                tv_wl_am_pkr.setText(String.valueOf(Float.parseFloat(dollar)*160)+" RPS");
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
@@ -153,7 +155,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     }
 
     private void iniUiComponents() {
-
+        tv_wl_am_pkr = (TextView) findViewById(R.id.tv_wl_am_pkr);
         tv_walletBalance = (TextView) findViewById(R.id.tv_walletBalance);
         baseActivity = new BaseActivity();
         cv_btn_sell =  (CardView) findViewById(R.id.btn_sell);

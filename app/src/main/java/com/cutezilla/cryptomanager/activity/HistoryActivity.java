@@ -42,7 +42,7 @@ public class HistoryActivity extends AppCompatActivity {
     FirebaseRecyclerOptions<LedgerEntry> FR_options;
     static FirebaseRecyclerAdapter<LedgerEntry, LedgerEntryViewHolder> FR_adapter;
     RecyclerView recyclerView;
-    TextView tv_crr_name,tv_walletBalance,tv_inv_amount;
+    TextView tv_crr_name,tv_walletBalance,tv_inv_amount,tv_wl_am_pkr;
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
     DecimalFormat percentageFormatD = new DecimalFormat("00.00");
 
@@ -61,9 +61,11 @@ public class HistoryActivity extends AppCompatActivity {
     private void populateUiComponent() {
         tv_inv_amount.setText(String.valueOf(percentageFormatD.format(Common.STR_SELECTED_LEDGER_INT.getTotalInvested())));
         tv_walletBalance.setText(String.valueOf(percentageFormat.format(Common.STR_SELECTED_LEDGER_INT.getTotalCryptoAmount())));
+        tv_wl_am_pkr.setText(percentageFormatD.format(Common.STR_SELECTED_LEDGER_INT.getTotalInvested()*160)+" RPS");
     }
 
     private void initUiComponent() {
+        tv_wl_am_pkr = (TextView) findViewById(R.id.tv_wl_am_pkr);
         tv_inv_amount = (TextView) findViewById(R.id.tv_inv_amount);
         tv_walletBalance = (TextView) findViewById(R.id.tv_walletBalance);
         tv_crr_name = (TextView) findViewById(R.id.tv_crr_name);
