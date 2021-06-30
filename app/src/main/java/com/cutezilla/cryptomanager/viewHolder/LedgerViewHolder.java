@@ -12,9 +12,13 @@ import com.cutezilla.cryptomanager.Interface.ItemClickListener;
 import com.cutezilla.cryptomanager.R;
 import com.cutezilla.cryptomanager.model.Ledger;
 
+import java.text.DecimalFormat;
+
 public class LedgerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     ItemClickListener itemClickListener;
     TextView currName,time,maxBuy,minBuy,totalCur,totalInvested;
+    DecimalFormat percentageFormat = new DecimalFormat("00.0000");
+    DecimalFormat percentageFormatD = new DecimalFormat("00.00");
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
@@ -40,7 +44,7 @@ public class LedgerViewHolder extends RecyclerView.ViewHolder implements View.On
         time.setText(ledger.getTime());
         maxBuy.setText(String.valueOf(ledger.getHighestBuyingPrice()));
         minBuy.setText(String.valueOf(ledger.getLowestBuyingPrice()));
-        totalInvested.setText(String.valueOf(ledger.getTotalInvested())+"$");
-        totalCur.setText(String.valueOf(ledger.getTotalCryptoAmount()));
+        totalInvested.setText(percentageFormatD.format(ledger.getTotalInvested())+"$");
+        totalCur.setText(percentageFormat.format(ledger.getTotalCryptoAmount()));
     }
 }

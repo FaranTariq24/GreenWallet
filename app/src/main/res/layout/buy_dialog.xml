@@ -191,6 +191,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:weightSum="4"
+            android:background="@color/grey_3"
             android:orientation="horizontal">
             <EditText
                 android:id="@+id/et_investedamount"
@@ -211,6 +212,7 @@
                 android:textColor="@color/green_600"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@color/grey_3"
                 android:text="Max">
             </Button>
         </LinearLayout>

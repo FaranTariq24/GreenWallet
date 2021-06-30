@@ -389,6 +389,12 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             tv_iv_des_buy.setVisibility(View.GONE);
             tv_name.setText(Common.STR_SELL);
             lv_head.setBackgroundColor(Color.parseColor("#E53935"));
+            bt_max_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    investedAmount.setText(Common.MAX_VALUE);
+                }
+            });
         }
         buyPrice.requestFocus();
 
@@ -437,9 +443,11 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         if (!Common.LEDG_LIST.isEmpty()&&!buyStatus){
                             for (Ledger ld: Common.LEDG_LIST){
+                                tv_iv_des_sell.setText("");
                                 if (ld.getCurrency_name().equals(currencyList.get(position))){
                                     Common.STR_SELECTED_LEDGER_SELL = ld;
-                                    tv_iv_des_sell.setText("Available amount: "+percentageFormatD.format(ld.getTotalInvested())+" $ ");
+                                    Common.MAX_VALUE=percentageFormatD.format(ld.getTotalInvested());
+                                    tv_iv_des_sell.setText("Available USD: "+percentageFormatD.format(ld.getTotalInvested())+"$ & currency: "+percentageFormat.format(ld.getTotalCryptoAmount()));
 //                                    Toast.makeText(MainActivity.this,String.valueOf(ld.getTotalInvested()),Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -471,8 +479,10 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 //                Toast.makeText(MainActivity.this,s,Toast.LENGTH_SHORT).show();
                 if (!s.toString().equals("")){
-                    String cake = String.valueOf(Common.STR_SELECTED_LEDGER_SELL.getTotalInvested()/Float.parseFloat(s.toString()));
+                    String currency = String.valueOf(Common.STR_SELECTED_LEDGER_SELL.getTotalInvested()/Float.parseFloat(s.toString()));
                     String dollar = String.valueOf(percentageFormatD.format(Common.STR_SELECTED_LEDGER_SELL.getTotalCryptoAmount()*Float.parseFloat(s.toString())));
+                    //"Available USD: "+percentageFormatD.format(ld.getTotalInvested())+"$ & currency: "+percentageFormat.format(ld.getTotalCryptoAmount())
+                    Common.MAX_VALUE=dollar;
                     tv_iv_des_sell.setText("Available USD: "+dollar+"$");
                 }
 

@@ -22,6 +22,7 @@ public class Common {
     public static final String STR_SELL ="SELL";
     public static  String SELECTED_CURRENCY ;
 
+    public static String MAX_VALUE;
     public static Ledger STR_SELECTED_LEDGER_SELL;
     public  static Ledger STR_SELECTED_LEDGER_INT;
 
