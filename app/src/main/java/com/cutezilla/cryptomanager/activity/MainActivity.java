@@ -371,6 +371,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
         Calendar calendar;
         calendar = Calendar.getInstance();
+        final boolean[] containsData = {false};
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy-hh-mm");
         final Button buyDate = (Button) dialog.findViewById(R.id.et_buy_date);
         final SearchableSpinner currency = (SearchableSpinner) dialog.findViewById(R.id.ss_id);
@@ -442,14 +443,18 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         if (!Common.LEDG_LIST.isEmpty()&&!buyStatus){
+                            containsData[0] = false;
                             for (Ledger ld: Common.LEDG_LIST){
-                                tv_iv_des_sell.setText("");
                                 if (ld.getCurrency_name().equals(currencyList.get(position))){
                                     Common.STR_SELECTED_LEDGER_SELL = ld;
                                     Common.MAX_VALUE=percentageFormatD.format(ld.getTotalInvested());
-                                    tv_iv_des_sell.setText("Available USD: "+percentageFormatD.format(ld.getTotalInvested())+"$ & currency: "+percentageFormat.format(ld.getTotalCryptoAmount()));
+                                    containsData[0] =true;
+                                    tv_iv_des_sell.setText("Available USD: "+percentageFormatD.format(ld.getTotalInvested())+"$ || currency: "+percentageFormat.format(ld.getTotalCryptoAmount()));
 //                                    Toast.makeText(MainActivity.this,String.valueOf(ld.getTotalInvested()),Toast.LENGTH_SHORT).show();
                                 }
+                            }
+                            if (!containsData[0]){
+                                tv_iv_des_sell.setText("");
                             }
                         }
                     }
@@ -478,7 +483,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 //                Toast.makeText(MainActivity.this,s,Toast.LENGTH_SHORT).show();
-                if (!s.toString().equals("")){
+                if (!s.toString().equals("")&& containsData[0]){
                     String currency = String.valueOf(Common.STR_SELECTED_LEDGER_SELL.getTotalInvested()/Float.parseFloat(s.toString()));
                     String dollar = String.valueOf(percentageFormatD.format(Common.STR_SELECTED_LEDGER_SELL.getTotalCryptoAmount()*Float.parseFloat(s.toString())));
                     //"Available USD: "+percentageFormatD.format(ld.getTotalInvested())+"$ & currency: "+percentageFormat.format(ld.getTotalCryptoAmount())
