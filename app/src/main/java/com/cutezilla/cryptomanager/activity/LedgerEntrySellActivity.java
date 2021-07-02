@@ -42,8 +42,8 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import pl.utkala.searchablespinner.SearchableSpinner;
+public class LedgerEntrySellActivity extends AppCompatActivity {
 
-public class LedgerEntryActivity extends AppCompatActivity {
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private SearchableSpinner coinSpinner, currencySpinner ;
@@ -65,7 +65,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ledger_entry);
         BaseActivity baseActivity = new BaseActivity();
-        progressBar = baseActivity.progressDialog(LedgerEntryActivity.this, "Please wait", "Fetching currency data....");
+        progressBar = baseActivity.progressDialog(LedgerEntrySellActivity.this, "Please wait", "Fetching currency data....");
         intUiComponent();
         fetchCurrency();
         fetchCompare();
@@ -113,8 +113,8 @@ public class LedgerEntryActivity extends AppCompatActivity {
 
     private void submitData() {
         if (buyDate.getText().toString().equals("") || coinSpinner.getSelectedItem().toString().equals("") || currencySpinner.getSelectedItem().toString().equals("")
-             || et_buyprice.getText().toString().equals("") || et_investedamount.getText().toString().equals("")){
-            Toast.makeText(LedgerEntryActivity.this,"Kindly fill the required fields",Toast.LENGTH_SHORT).show();
+                || et_buyprice.getText().toString().equals("") || et_investedamount.getText().toString().equals("")){
+            Toast.makeText(LedgerEntrySellActivity.this,"Kindly fill the required fields",Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -136,13 +136,13 @@ public class LedgerEntryActivity extends AppCompatActivity {
                                 coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
                                 if (coinArray.getJSONObject(i).getJSONObject("platforms").has("binance-smart-chain")
                                         || coinArray.getJSONObject(i).getJSONObject("platforms").has("binancecoin")
-                                            || coinArray.getJSONObject(i).get("symbol").equals("btc")){
+                                        || coinArray.getJSONObject(i).get("symbol").equals("btc")){
                                     coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString());
                                     coinList.add(coin);
                                 }
 
                             }
-                            ArrayAdapter<String> adp1 = new ArrayAdapter<String>(LedgerEntryActivity.this,
+                            ArrayAdapter<String> adp1 = new ArrayAdapter<String>(LedgerEntrySellActivity.this,
                                     android.R.layout.simple_list_item_1, coinSymbolList);
                             adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             coinSpinner.setAdapter(adp1);
@@ -211,7 +211,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
                                 }
                             }
 
-                            ArrayAdapter<String> adp1 = new ArrayAdapter<String>(LedgerEntryActivity.this,
+                            ArrayAdapter<String> adp1 = new ArrayAdapter<String>(LedgerEntrySellActivity.this,
                                     android.R.layout.simple_list_item_1, vsCurrencyList);
                             adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             currencySpinner.setAdapter(adp1);

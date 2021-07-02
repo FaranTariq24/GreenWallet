@@ -9,8 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.LedgerEntryActivity"></activity>
-        <activity android:name=".activity.AdminActivity" />
+        <activity android:name=".activity.LedgerEntrySellActivity"></activity>
+        <activity android:name=".activity.LedgerEntryActivity" />
         <activity android:name=".activity.HistoryActivity" />
         <activity android:name=".activity.LandingPage">
             <intent-filter>
