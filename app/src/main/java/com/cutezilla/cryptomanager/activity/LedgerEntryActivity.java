@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,43 +26,72 @@ import com.cutezilla.cryptomanager.adapter.CurrencyListAdapter;
 import com.cutezilla.cryptomanager.model.Coin;
 import com.cutezilla.cryptomanager.services.CoinGeckoService;
 import com.cutezilla.cryptomanager.util.Common;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import pl.utkala.searchablespinner.SearchableSpinner;
 
 public class LedgerEntryActivity extends AppCompatActivity {
 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private SearchableSpinner coinSpinner, currencySpinner ;
+    private Button bt_curr_max_btn,buyDate;
+    private EditText et_buyprice;
     private TextView tv_selectedcoin,tv_selectedCurrency,tv_selectedCurrencyPrice,tv_coin_vr;
     String selectedCoinId = null;
     String selectedCurrency = null;
+    SweetAlertDialog progressBar;
+    long date_ship_millis;
+    Calendar calendar;
     private List<Coin> coinList= new ArrayList<>();
     private List<String> coinSymbolList = new ArrayList<>();
     private List<String> vsCurrencyList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        calendar = Calendar.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ledger_entry);
-
+        BaseActivity baseActivity = new BaseActivity();
+        progressBar = baseActivity.progressDialog(LedgerEntryActivity.this, "Please wait", "Fetching currency data....");
         intUiComponent();
         fetchCurrency();
         fetchCompare();
     }
     private void intUiComponent() {
+        buyDate = (Button) findViewById(R.id.et_buy_date);
+        bt_curr_max_btn = (Button) findViewById(R.id.bt_curr_max_btn);
+        et_buyprice = (EditText) findViewById(R.id.et_buyprice);
         tv_selectedcoin = (TextView) findViewById(R.id.tv_selectedcoin);
         tv_selectedCurrency = (TextView) findViewById(R.id.tv_selectedCurrency);
         tv_selectedCurrencyPrice = (TextView) findViewById(R.id.tv_selectedCurrencyPrice);
         tv_coin_vr = (TextView) findViewById(R.id.tv_coin_vr);
         coinSpinner = (SearchableSpinner) findViewById(R.id.ss_coin_id);
         currencySpinner = (SearchableSpinner) findViewById(R.id.ss_currency_id);
+
+        buyDate.setText(dateFormat.format(calendar.getTime()));
+        buyDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogDatePickerLight((Button) v);
+            }
+        });
+        bt_curr_max_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                et_buyprice.setText(tv_selectedCurrencyPrice.getText().toString());
+            }
+        });
     }
     private void fetchCurrency() {
         RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
@@ -257,6 +289,39 @@ public class LedgerEntryActivity extends AppCompatActivity {
     }
     private void updateDollar(JSONObject jsonObject) throws JSONException {
         tv_selectedCurrencyPrice.setText( jsonObject.getJSONObject(selectedCoinId).get(selectedCurrency).toString());
+        progressBar.dismiss();
     }
+    private void dialogDatePickerLight(final Button bt) {
+        Calendar cur_calender = Calendar.getInstance();
 
+        DatePickerDialog datePicker = DatePickerDialog.newInstance(
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        date_ship_millis = calendar.getTimeInMillis();
+
+
+//                        Toast.makeText(ProfileEditActivity.this, Tools.getFormattedDateSimple(date_ship_millis), Toast.LENGTH_SHORT).show();
+                        String date = DateFormat.format("dd-MM-yyyy", calendar).toString();
+                        bt.setText(date);
+
+                    }
+
+                },
+                cur_calender.get(Calendar.YEAR),
+                cur_calender.get(Calendar.MONTH),
+                cur_calender.get(Calendar.DAY_OF_MONTH)
+        );
+        //set dark light
+        datePicker.setThemeDark(true);
+
+        datePicker.setAccentColor(getResources().getColor(R.color.colorPrimary));
+//        datePicker.setMinDate(cur_calender);
+        datePicker.setMaxDate(cur_calender);
+        datePicker.show(getFragmentManager(), "Datepickerdialog");
+    }
 }
