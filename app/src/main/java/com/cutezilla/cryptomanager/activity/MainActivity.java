@@ -284,6 +284,15 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             else if (id == R.id.nav_addCurrency) {
                 showAddCurrencyPopup();
             }
+            else if (id == R.id.nav_terms) {
+            Toast.makeText(this, "Terms and condition", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(MainActivity.this, AdminActivity.class);
+            startActivity(intent);
+        }
+            else if (id == R.id.nav_feedback) {
+            Intent intent = new Intent(MainActivity.this, LedgerEntryActivity.class);
+            startActivity(intent);
+        }
 //            else {
 //                Toast.makeText(IndexActivity.this, "Device is already attached", Toast.LENGTH_SHORT).show();
 //            }
@@ -376,7 +385,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         final boolean[] containsData = {false};
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yy-hh-mm");
         final Button buyDate = (Button) dialog.findViewById(R.id.et_buy_date);
-        final SearchableSpinner currency = (SearchableSpinner) dialog.findViewById(R.id.ss_id);
+        final SearchableSpinner currencySS = (SearchableSpinner) dialog.findViewById(R.id.ss_id);
         final EditText buyPrice = (EditText) dialog.findViewById(R.id.et_buyprice);
         final EditText investedAmount = (EditText) dialog.findViewById(R.id.et_investedamount);
         final LinearLayout lv_head = (LinearLayout) dialog.findViewById(R.id.lv_head);
@@ -439,8 +448,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                             }
                         });
                 ArrayAdapter arrayAdapter=new ArrayAdapter(MainActivity.this, android.R.layout.simple_dropdown_item_1line, currencyList);
-                currency.setAdapter(arrayAdapter);
-                currency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                currencySS.setAdapter(arrayAdapter);
+                currencySS.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -515,7 +524,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         ((AppCompatButton) dialog.findViewById(R.id.bt_submit)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (buyDate.getText().toString().equals("") || currency.getSelectedItem().toString().equals("")
+                if (buyDate.getText().toString().equals("") || currencySS.getSelectedItem().toString().equals("")
                 ||buyPrice.getText().toString().equals("")||investedAmount.equals("")){
                     Toast.makeText(MainActivity.this,"kindly provide the data",Toast.LENGTH_SHORT).show();
                     return;
@@ -523,7 +532,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
                 String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount,strCryptoAmount;
                 strBuyDate = buyDate.getText().toString();
-                strCurrency = currency.getSelectedItem().toString();
+                strCurrency = currencySS.getSelectedItem().toString();
                 strBuyPrice = buyPrice.getText().toString();
                 strInvestedAmount = investedAmount.getText().toString();
                 strCryptoAmount = String.valueOf(percentageFormat.format(Float.parseFloat(strInvestedAmount)/Float.parseFloat(strBuyPrice)));

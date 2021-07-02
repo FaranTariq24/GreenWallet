@@ -10,6 +10,10 @@ import java.util.List;
 
 public class Common {
 
+
+    public static final String ConiFeckoGETLISTURL = "https://api.coingecko.com/api/v3/coins/list?include_platform=true";
+    public static final String ConiFeckoGETVSCURRENCY = "https://api.coingecko.com/api/v3/simple/supported_vs_currencies";
+
     public static Account userAccount;
     public static final String LOGTRACE = "logtrace";
     public static final String STR_EMAIL = "email";

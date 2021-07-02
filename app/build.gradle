@@ -97,6 +97,8 @@ dependencies {
 
     //dropdown search
     implementation 'com.github.DonMat:searchablespinner:v1.0.1'
+    //ripple
+    implementation 'com.balysv:material-ripple:1.0.2'                  // ripple effect
 }
 repositories {
     maven { url "https://jitpack.io" }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    tools:context=".activity.AdminActivity">
+
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CALL"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="144dp"
+        tools:ignore="MissingConstraints" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_weight="1"
+        android:padding="@dimen/spacing_large">
+
+        <pl.utkala.searchablespinner.SearchableSpinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/my_custom_background"
+            android:id="@+id/ss_admin_id"
+            app:dialogTitle="Select">
+
+        </pl.utkala.searchablespinner.SearchableSpinner>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="@dimen/spacing_large">
+
+        <pl.utkala.searchablespinner.SearchableSpinner
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/my_custom_background"
+            android:id="@+id/ss_id"
+            app:dialogTitle="Select">
+
+        </pl.utkala.searchablespinner.SearchableSpinner>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:scrollingCache="true" />
+
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>
