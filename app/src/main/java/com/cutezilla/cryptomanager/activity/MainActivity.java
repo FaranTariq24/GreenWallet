@@ -286,8 +286,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             }
             else if (id == R.id.nav_terms) {
             Toast.makeText(this, "Terms and condition", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(MainActivity.this, AdminActivity.class);
-            startActivity(intent);
         }
             else if (id == R.id.nav_feedback) {
             Intent intent = new Intent(MainActivity.this, LedgerEntryActivity.class);
