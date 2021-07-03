@@ -168,7 +168,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             @Override
             public void onClick(View v) {
                 Log.i(Common.LOGTRACE, this.getClass()+ " Buy clicked " );
-                showLedgerEntryPopup(true);
+               Intent intent = new Intent(MainActivity.this,LedgerEntryActivity.class);
+               startActivity(intent);
             }
         });
         cv_btn_sell.setOnClickListener(new View.OnClickListener(){
