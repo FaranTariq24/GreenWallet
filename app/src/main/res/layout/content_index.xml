@@ -147,7 +147,7 @@
                                     android:id="@+id/tv_wl_am_pkr"
                                     android:layout_weight="1.5"
                                     android:layout_width="0dp"
-                                    android:text="10000 PKR"
+                                    android:text="0 PKR"
                                     android:layout_height="wrap_content" />
                             </LinearLayout>
 

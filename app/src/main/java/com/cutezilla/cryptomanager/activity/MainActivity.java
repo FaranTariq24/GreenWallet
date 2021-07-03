@@ -176,7 +176,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             @Override
             public void onClick(View v) {
                 Log.i(Common.LOGTRACE, this.getClass()+ " Sell clicked " );
-                showLedgerEntryPopup(false);
+                Intent intent = new Intent(MainActivity.this,LedgerEntrySellActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -289,7 +290,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             Toast.makeText(this, "Terms and condition", Toast.LENGTH_SHORT).show();
         }
             else if (id == R.id.nav_feedback) {
-            Intent intent = new Intent(MainActivity.this, LedgerEntryActivity.class);
+            Intent intent = new Intent(MainActivity.this, LedgerEntrySellActivity.class);
             startActivity(intent);
         }
 //            else {

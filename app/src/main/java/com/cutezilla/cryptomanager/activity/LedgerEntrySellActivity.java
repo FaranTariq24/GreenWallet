@@ -1,9 +1,11 @@
 package com.cutezilla.cryptomanager.activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -25,20 +27,32 @@ import com.android.volley.toolbox.Volley;
 import com.cutezilla.cryptomanager.R;
 import com.cutezilla.cryptomanager.adapter.CurrencyListAdapter;
 import com.cutezilla.cryptomanager.model.Coin;
+import com.cutezilla.cryptomanager.model.Ledger;
+import com.cutezilla.cryptomanager.model.LedgerEntry;
 import com.cutezilla.cryptomanager.services.CoinGeckoService;
+import com.cutezilla.cryptomanager.services.QueryService;
 import com.cutezilla.cryptomanager.util.Common;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import pl.utkala.searchablespinner.SearchableSpinner;
@@ -46,24 +60,28 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
 
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd-MM-yy-hh-mm");
     private SearchableSpinner coinSpinner, currencySpinner ;
-    private Button bt_curr_max_btn,buyDate;
+    private Button bt_curr_max_btn,buyDate,bt_max_btn;
     private EditText et_buyprice,et_investedamount;
-    private TextView tv_selectedcoin,tv_selectedCurrency,tv_selectedCurrencyPrice,tv_coin_vr;
+    private TextView tv_selectedcoin,tv_selectedCurrency,tv_selectedCurrencyPrice,tv_coin_vr,tv_availableUsd;
     String selectedCoinId = null;
     String selectedCurrency = null;
     SweetAlertDialog progressBar;
     long date_ship_millis;
     Calendar calendar;
+    private boolean submitStatus = false;
     private List<Coin> coinList= new ArrayList<>();
     private List<String> coinSymbolList = new ArrayList<>();
     private List<String> vsCurrencyList = new ArrayList<>();
     private AppCompatButton bt_cancel,bt_submit;
+    QueryService queryService = new QueryService();
+    DecimalFormat percentageFormat = new DecimalFormat("00.0000");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         calendar = Calendar.getInstance();
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ledger_entry);
+        setContentView(R.layout.activity_ledger_entry_sell);
         BaseActivity baseActivity = new BaseActivity();
         progressBar = baseActivity.progressDialog(LedgerEntrySellActivity.this, "Please wait", "Fetching currency data....");
         intUiComponent();
@@ -71,6 +89,8 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
         fetchCompare();
     }
     private void intUiComponent() {
+        bt_max_btn = findViewById(R.id.bt_max_btn);
+        tv_availableUsd = findViewById(R.id.tv_availableUsd);
         et_investedamount = findViewById(R.id.et_investedamount);
         bt_cancel = findViewById(R.id.bt_cancel);
         bt_submit = findViewById(R.id.bt_submit);
@@ -109,16 +129,144 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
                 submitData();
             }
         });
+        bt_max_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                et_investedamount.setText(tv_availableUsd.getText().toString());
+            }
+        });
     }
 
     private void submitData() {
         if (buyDate.getText().toString().equals("") || coinSpinner.getSelectedItem().toString().equals("") || currencySpinner.getSelectedItem().toString().equals("")
-                || et_buyprice.getText().toString().equals("") || et_investedamount.getText().toString().equals("")){
+                || et_buyprice.getText().toString().equals("") || et_investedamount.getText().toString().equals("")||!submitStatus){
             Toast.makeText(LedgerEntrySellActivity.this,"Kindly fill the required fields",Toast.LENGTH_SHORT).show();
+        return;
         }
+        String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount,strCryptoAmount;
+        strBuyDate = buyDate.getText().toString();
+        strCurrency = tv_coin_vr.getText().toString();
+        strBuyPrice = et_buyprice.getText().toString();
+        strInvestedAmount = et_investedamount.getText().toString();
+        strCryptoAmount = String.valueOf(percentageFormat.format(Float.parseFloat(strInvestedAmount)/Float.parseFloat(strBuyPrice)));
+
+        LedgerEntry LBE = new LedgerEntry();
+        String ledgerBuyId = Common.createLedgerEntryId(strCurrency);
+        LBE.setLedger_id(ledgerBuyId);
+        LBE.setDate(strBuyDate);
+        LBE.setCurrency(strCurrency);
+        LBE.setCryptoAmount(Float.parseFloat(strCryptoAmount));
+        LBE.setPrice(Float.parseFloat(strBuyPrice));
+        LBE.setInvestedAmount(Float.parseFloat(strInvestedAmount));
+        LBE.setStatus(Common.STR_SELL);
+
+        FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
+                .child(Objects.requireNonNull(FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry).push().getKey()))
+                .setValue(LBE).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Ledger ledger = new Ledger();
+
+                Query ledgerQuery = queryService.getLedgerByLedgerId(ledgerBuyId);
+                ledgerQuery
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                if (dataSnapshot.exists()){
+                                    queryService.getLedgerObjectByLedgerId(ledgerBuyId)
+                                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                                                    Ledger ledger1 = new Ledger();
+                                                    for(DataSnapshot dataSnapshot1: snapshot.getChildren()){
+                                                        ledger1 = dataSnapshot1.getValue(Ledger.class);
+                                                    }
+                                                    if(ledger1!=null){
+
+
+                                                            float cryptAm = ledger1.getTotalCryptoAmount()-Float.parseFloat(strCryptoAmount);
+                                                            ledger1.setTotalCryptoAmount(cryptAm);
+                                                            ledger1.setTotalInvested(cryptAm*LBE.getPrice());
+
+
+                                                        FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
+                                                                .child(ledgerBuyId)
+                                                                .setValue(ledger1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull  Task<Void> task) {
+                                                                showSucessDialog();
+                                                            }
+                                                        });
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                                }
+                                            });
+
+                                }else{
+
+
+                                    ledger.setLedger_id(Common.removeSpecialCharacter(Common.userAccount.getEmail()));
+                                    ledger.setLedgerEntry_id(ledgerBuyId);
+                                    ledger.setCurrency_name(strCurrency);
+                                    ledger.setHighestBuyingPrice(Float.parseFloat(strBuyPrice));
+                                    ledger.setLowestBuyingPrice(Float.parseFloat(strBuyPrice));
+                                    ledger.setTime(dateFormat2.format(calendar.getTime()).toString());
+                                    ledger.setTotalInvested(Float.parseFloat(strInvestedAmount));
+                                    ledger.setTotalCryptoAmount(Float.parseFloat(strCryptoAmount));
+
+                                    FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
+                                            .child(ledgerBuyId)
+                                            .setValue(ledger).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull  Task<Void> task) {
+                                            showSucessDialog();
+                                        }
+                                    });
+
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+            }
+        });
 
     }
+    private void showSucessDialog(){
 
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE);
+        sweetAlertDialog.setTitleText("SELL");
+        sweetAlertDialog.setContentText("Record updated");
+        sweetAlertDialog.setConfirmText("Ok");
+        sweetAlertDialog.setCanceledOnTouchOutside(false);
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                Intent intent = new Intent(LedgerEntrySellActivity.this,MainActivity.class);
+                startActivity(intent);
+                sweetAlertDialog.cancel();
+
+            }
+        });
+
+
+        sweetAlertDialog.show();
+
+
+
+
+
+    }
     private void fetchCurrency() {
         RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
         StringRequest sr = new StringRequest(Request.Method.GET, Common.ConiFeckoGETLISTURL,
@@ -315,6 +463,18 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
     }
     private void updateDollar(JSONObject jsonObject) throws JSONException {
         tv_selectedCurrencyPrice.setText( jsonObject.getJSONObject(selectedCoinId).get(selectedCurrency).toString());
+        if (!Common.LEDG_LIST.isEmpty()){
+            for (Ledger ld: Common.LEDG_LIST){
+                if (ld.getCurrency_name().equals(tv_coin_vr.getText().toString())){
+                    tv_availableUsd.setText(String.valueOf(ld.getTotalInvested()));
+                    submitStatus = true;
+                }else{
+                    tv_availableUsd.setText("Kindly select the available coin/currency for sale");
+                    submitStatus = false;
+                }
+
+            }
+        }
         progressBar.dismiss();
     }
     private void dialogDatePickerLight(final Button bt) {

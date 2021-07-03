@@ -17,7 +17,7 @@
             android:id="@+id/lv_head"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="@color/red_400"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="@dimen/spacing_large">
@@ -38,7 +38,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="BUY"
+                    android:text="SELL"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/White"
                     android:textSize="25sp"
@@ -300,31 +300,23 @@
 
                 </TextView>
 
-                <TextView
-                    android:id="@+id/tv_iv_des_sell"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="available amount: 31$"
-                    android:textColor="@color/Red"
-                    android:visibility="gone">
 
-                </TextView>
             </androidx.appcompat.widget.LinearLayoutCompat>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/grey_3"
+                android:background="@drawable/border_only"
                 android:orientation="horizontal"
+                android:padding="1dp"
                 android:weightSum="4">
 
                 <EditText
                     android:id="@+id/et_investedamount"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:background="@drawable/border_only"
+                    android:layout_weight="3"
+                    android:background="@color/grey_3"
                     android:gravity="top"
                     android:hint="Invested amount"
                     android:inputType="numberDecimal"
@@ -333,16 +325,38 @@
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/bt_max_btn"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginLeft="5px"
                     android:layout_weight="1"
                     android:background="@color/grey_3"
                     android:paddingBottom="15px"
-                    android:text="Max"
-                    android:textColor="@color/green_600"
-                    android:visibility="gone"/>
-            </LinearLayout>
 
+                    android:text="Max"
+                    android:textColor="@color/green_600"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_weight="1.5"
+                    android:text="Available amount: "
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tv_availableUsd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="--/--"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

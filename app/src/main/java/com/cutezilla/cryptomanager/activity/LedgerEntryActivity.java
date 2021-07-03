@@ -246,7 +246,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
 
         SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE);
         sweetAlertDialog.setTitleText("BUY");
-        sweetAlertDialog.setContentText("Values added");
+        sweetAlertDialog.setContentText("Record updated");
         sweetAlertDialog.setConfirmText("Ok");
         sweetAlertDialog.setCanceledOnTouchOutside(false);
 //        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
