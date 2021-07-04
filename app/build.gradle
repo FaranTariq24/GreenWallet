@@ -99,6 +99,8 @@ dependencies {
     implementation 'com.github.DonMat:searchablespinner:v1.0.1'
     //ripple
     implementation 'com.balysv:material-ripple:1.0.2'                  // ripple effect
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 repositories {
     maven { url "https://jitpack.io" }

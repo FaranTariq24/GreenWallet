@@ -26,9 +26,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.cutezilla.cryptomanager.Interface.ItemClickListener;
 import com.cutezilla.cryptomanager.R;
 import com.cutezilla.cryptomanager.model.Account;
+import com.cutezilla.cryptomanager.model.Coin;
 import com.cutezilla.cryptomanager.model.Currency;
 import com.cutezilla.cryptomanager.model.Ledger;
 import com.cutezilla.cryptomanager.model.LedgerEntry;
@@ -49,6 +57,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 
@@ -62,11 +71,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -89,6 +103,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     RecyclerView recyclerView;
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
     DecimalFormat percentageFormatD = new DecimalFormat("00.00");
+    SweetAlertDialog progressBar2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +112,10 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
         iniUiComponents();
         headerComponents();
+        if (Common.readFile(getApplicationContext())==null){
+             progressBar2 = baseActivity.progressDialog(MainActivity.this, "Please wait", "Updating data....");
+            fetchLocalCurrency();
+        }
 
         ll_header.setVisibility(View.VISIBLE);
         navigationView.setNavigationItemSelectedListener(this);
@@ -153,7 +172,63 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
 
     }
+    // Common.writefile(new Gson().toJson(coinList),getApplicationContext());
+    private void fetchLocalCurrency(){
+        ltv_loading.setVisibility(View.VISIBLE);
+         List<Coin> coinList= new ArrayList<>();
+         List<String> coinSymbolList = new ArrayList<>();
+        RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
+        StringRequest sr = new StringRequest(Request.Method.GET, Common.ConiFeckoGETLISTURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+//                        Log.e("HttpClient", "success! response: " + response.toString());
+//                        Log.i("VOLLEY", response);
+                        try {
+                            JSONArray coinArray = new JSONArray(response);
+                            for (int i = 0; i < coinArray.length(); i++) {
+                                Coin coin = new Coin();
+                                coin.setName(coinArray.getJSONObject(i).get("name").toString());
+                                coin.setId(coinArray.getJSONObject(i).get("id").toString());
+                                coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
+                                if (coinArray.getJSONObject(i).getJSONObject("platforms").has("binance-smart-chain")
+                                        || coinArray.getJSONObject(i).getJSONObject("platforms").has("binancecoin")
+                                        || coinArray.getJSONObject(i).get("symbol").equals("btc")){
+                                    coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString());
+                                    coinList.add(coin);
+                                }
 
+
+                            }
+                            Common.writefile(new Gson().toJson(coinList),getApplicationContext());
+                            progressBar2.dismiss();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("HttpClient", "error: " + error.toString());
+                    }
+                })
+        {
+            @Override
+            protected Map<String,String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("usd","YOUR USERNAME");
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("Content-Type","application/x-www-form-urlencoded");
+                return params;
+            }
+        };
+        queue.add(sr);
+    }
     private void iniUiComponents() {
         tv_wl_am_pkr = (TextView) findViewById(R.id.tv_wl_am_pkr);
         tv_walletBalance = (TextView) findViewById(R.id.tv_walletBalance);

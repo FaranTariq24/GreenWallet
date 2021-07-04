@@ -74,6 +74,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
     private List<String> coinSymbolList = new ArrayList<>();
     private List<String> vsCurrencyList = new ArrayList<>();
     private AppCompatButton bt_cancel,bt_submit;
+    BaseActivity baseActivity;
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
     QueryService queryService = new QueryService();
     @Override
@@ -81,10 +82,10 @@ public class LedgerEntryActivity extends AppCompatActivity {
         calendar = Calendar.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ledger_entry);
-        BaseActivity baseActivity = new BaseActivity();
+         baseActivity = new BaseActivity();
         progressBar = baseActivity.progressDialog(LedgerEntryActivity.this, "Please wait", "Fetching currency data....");
         intUiComponent();
-        fetchCurrency();
+        fetchLocalCurrency();
         fetchCompare();
     }
     private void intUiComponent() {
@@ -134,6 +135,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
             Toast.makeText(LedgerEntryActivity.this,"Kindly fill the required fields",Toast.LENGTH_SHORT).show();
             return;
         }
+        SweetAlertDialog progressBar2 = baseActivity.progressDialog(LedgerEntryActivity.this, "Please wait", "Updating data....");
         String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount,strCryptoAmount;
         strBuyDate = buyDate.getText().toString();
         strCurrency = tv_coin_vr.getText().toString();
@@ -273,79 +275,46 @@ public class LedgerEntryActivity extends AppCompatActivity {
 
 
     }
-    private void fetchCurrency() {
-        RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
-        StringRequest sr = new StringRequest(Request.Method.GET, Common.ConiFeckoGETLISTURL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-//                        Log.e("HttpClient", "success! response: " + response.toString());
-//                        Log.i("VOLLEY", response);
-                        try {
-                            JSONArray coinArray = new JSONArray(response);
-                            for (int i = 0; i < coinArray.length(); i++) {
-                                Coin coin = new Coin();
-                                coin.setName(coinArray.getJSONObject(i).get("name").toString());
-                                coin.setId(coinArray.getJSONObject(i).get("id").toString());
-                                coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
-                                if (coinArray.getJSONObject(i).getJSONObject("platforms").has("binance-smart-chain")
-                                        || coinArray.getJSONObject(i).getJSONObject("platforms").has("binancecoin")
-                                            || coinArray.getJSONObject(i).get("symbol").equals("btc")){
-                                    coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString());
-                                    coinList.add(coin);
-                                }
+    private void fetchLocalCurrency(){
+        try {
+            String read = Common.readFile(getApplicationContext());
+            JSONArray coinArray = new JSONArray(read);
+            for (int i = 0; i < coinArray.length(); i++) {
+                Coin coin = new Coin();
+                coin.setName(coinArray.getJSONObject(i).get("name").toString());
+                coin.setId(coinArray.getJSONObject(i).get("id").toString());
+                coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
+                coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString());
+                coinList.add(coin);
 
-                            }
-                            ArrayAdapter<String> adp1 = new ArrayAdapter<String>(LedgerEntryActivity.this,
-                                    android.R.layout.simple_list_item_1, coinSymbolList);
-                            adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            coinSpinner.setAdapter(adp1);
-                            coinSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                @SuppressLint("SetTextI18n")
-                                @Override
-                                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                    tv_selectedcoin.setText(coinSymbolList.get(position));
-                                    tv_coin_vr.setText(tv_selectedcoin.getText().toString().toUpperCase()+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
-                                    if (!tv_selectedcoin.getText().toString().equals("") & !tv_selectedCurrency.getText().toString().equals("")){
-                                        fetchMarketPrice(tv_selectedcoin.getText().toString(),tv_selectedCurrency.getText().toString());
-                                    }
-                                }
 
-                                @Override
-                                public void onNothingSelected(AdapterView<?> parent) {
-
-                                }
-                            });
-                            coinSpinner.setDialogTitle("Select currency");
-                            coinSpinner.setDismissText("Cancel");
-                            coinSpinner.setSelection(3);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("HttpClient", "error: " + error.toString());
-                    }
-                })
-        {
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("usd","YOUR USERNAME");
-                return params;
             }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("Content-Type","application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-        queue.add(sr);
+            ArrayAdapter<String> adp1 = new ArrayAdapter<String>(LedgerEntryActivity.this,
+                    android.R.layout.simple_list_item_1, coinSymbolList);
+            adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            coinSpinner.setAdapter(adp1);
+            coinSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    tv_selectedcoin.setText(coinSymbolList.get(position));
+                    tv_coin_vr.setText(tv_selectedcoin.getText().toString().toUpperCase()+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
+                    if (!tv_selectedcoin.getText().toString().equals("") & !tv_selectedCurrency.getText().toString().equals("")){
+                        fetchMarketPrice(tv_selectedcoin.getText().toString(),tv_selectedCurrency.getText().toString());
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            coinSpinner.setDialogTitle("Select currency");
+            coinSpinner.setDismissText("Cancel");
+            coinSpinner.setSelection(3);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void fetchCompare() {

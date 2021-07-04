@@ -344,7 +344,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:layout_weight="1.5"
+                    android:layout_weight="2"
                     android:text="Available amount: "
                     android:textColor="@color/colorPrimary"
                     android:textStyle="bold"/>

@@ -1,10 +1,17 @@
 package com.cutezilla.cryptomanager.util;
 
+import android.content.Context;
 import android.util.Patterns;
+import android.widget.Toast;
 
 import com.cutezilla.cryptomanager.model.Account;
 import com.cutezilla.cryptomanager.model.Ledger;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +81,64 @@ public class Common {
     public static String createLedgerId(String currency){
         String id = removeSpecialCharacter(userAccount.getEmail()+"ledgerId"+currency);
         return id;
+    }
+
+
+
+    public static void writefile(String message, Context context){
+        String fileName="symbol.json";
+        File file = new File(context.getFilesDir(),fileName);
+        if (file!=null){
+            FileWriter fileWriter = null;
+            BufferedWriter bufferedWriter = null;
+            try {
+                if (!file.exists()){
+                    if (file.createNewFile()){
+                    file = new File(context.getFilesDir(),fileName);
+                    }else {return;}
+                }
+                fileWriter = new FileWriter(file.getAbsoluteFile());
+                bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.write(message);
+                bufferedWriter.close();
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+    }
+    public static String readFile(Context context){
+        String fileName="symbol.json";
+        String response = null;
+        File file = new File(context.getFilesDir(),fileName);
+
+        if (!file.exists()){
+            return null;
+        }
+        if (file!=null){
+            FileReader fileReader = null;
+            BufferedReader bufferedReader = null;
+
+            try {
+                //read
+                StringBuffer output = new StringBuffer();
+                fileReader= new FileReader(file.getAbsoluteFile());
+                bufferedReader=new BufferedReader(fileReader);
+                String line="";
+                while ((line=bufferedReader.readLine())!=null){
+                    output.append(line+"\n");
+
+                }
+                response=output.toString();
+                bufferedReader.close();
+            }catch (Exception e){
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+        return response;
     }
 
 }
