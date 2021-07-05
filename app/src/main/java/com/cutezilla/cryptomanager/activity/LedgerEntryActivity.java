@@ -118,6 +118,8 @@ public class LedgerEntryActivity extends AppCompatActivity {
         bt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(LedgerEntryActivity.this,MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -127,6 +129,13 @@ public class LedgerEntryActivity extends AppCompatActivity {
                 submitData();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(LedgerEntryActivity.this,MainActivity.class);
+        startActivity(intent);
     }
 
     private void submitData() {
@@ -262,6 +271,8 @@ public class LedgerEntryActivity extends AppCompatActivity {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
 
+                Intent intent = new Intent(LedgerEntryActivity.this,MainActivity.class);
+                startActivity(intent);
                 sweetAlertDialog.cancel();
                 finish();
 
