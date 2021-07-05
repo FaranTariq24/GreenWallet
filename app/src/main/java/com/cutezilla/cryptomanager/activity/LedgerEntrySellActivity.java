@@ -161,7 +161,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
             Toast.makeText(LedgerEntrySellActivity.this,"Kindly fill the required fields",Toast.LENGTH_SHORT).show();
         return;
         }
-        SweetAlertDialog progressBar2 = baseActivity.progressDialog(LedgerEntrySellActivity.this, "Please wait", "Updating data....");
+        progressBar =  baseActivity.progressDialog(LedgerEntrySellActivity.this, "Please wait", "Updating record....");
         String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount,strCryptoAmount;
         strBuyDate = buyDate.getText().toString();
         strCurrency = tv_coin_vr.getText().toString();
@@ -214,6 +214,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
                                                                 .setValue(ledger1).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull  Task<Void> task) {
+                                                                progressBar.dismiss();
                                                                 showSucessDialog();
                                                             }
                                                         });
@@ -244,7 +245,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
                                             .setValue(ledger).addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull  Task<Void> task) {
-                                            progressBar2.dismiss();
+                                            progressBar.dismiss();
                                             showSucessDialog();
                                         }
                                     });

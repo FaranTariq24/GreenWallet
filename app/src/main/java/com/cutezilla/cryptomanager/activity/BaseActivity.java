@@ -62,8 +62,10 @@ public class BaseActivity extends AppCompatActivity {
                             ledgerSnapshot.getRef().removeValue();
                             Common.LEDG_LIST.remove(id);
                         }
+
                         ((MainActivity) ct).refreshActivity();
                         ((MainActivity) ct).finish();
+                        sweetAlertDialog.dismiss();
                     }
 
                     @Override

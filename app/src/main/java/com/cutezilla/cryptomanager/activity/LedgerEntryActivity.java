@@ -135,7 +135,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
             Toast.makeText(LedgerEntryActivity.this,"Kindly fill the required fields",Toast.LENGTH_SHORT).show();
             return;
         }
-        SweetAlertDialog progressBar2 = baseActivity.progressDialog(LedgerEntryActivity.this, "Please wait", "Updating data....");
+        progressBar =  baseActivity.progressDialog(LedgerEntryActivity.this, "Please wait", "Updating record....");
         String strBuyDate,strCurrency,strBuyPrice,strInvestedAmount,strCryptoAmount;
         strBuyDate = buyDate.getText().toString();
         strCurrency = tv_coin_vr.getText().toString();
@@ -194,6 +194,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
                                                                     @Override
                                                                     public void onComplete(@NonNull  Task<Void> task) {
                                                                         if (task.isComplete()) {
+                                                                            progressBar.dismiss();
                                                                             showSucessDialog();
                                                                         }
                                                                     }
