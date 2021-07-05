@@ -95,6 +95,15 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
         fetchLocalCurrency();
         fetchCompare();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(LedgerEntrySellActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void intUiComponent() {
         bt_max_btn = findViewById(R.id.bt_max_btn);
         tv_availableUsd = findViewById(R.id.tv_availableUsd);
@@ -127,6 +136,8 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
         bt_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(LedgerEntrySellActivity.this,MainActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -264,6 +275,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
                 Intent intent = new Intent(LedgerEntrySellActivity.this,MainActivity.class);
                 startActivity(intent);
                 sweetAlertDialog.cancel();
+                finish();
 
             }
         });

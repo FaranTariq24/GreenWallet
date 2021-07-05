@@ -257,6 +257,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 Log.i(Common.LOGTRACE, this.getClass()+ " Sell clicked " );
                 Intent intent = new Intent(MainActivity.this,LedgerEntrySellActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

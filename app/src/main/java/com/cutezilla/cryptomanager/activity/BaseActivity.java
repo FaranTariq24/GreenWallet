@@ -63,6 +63,7 @@ public class BaseActivity extends AppCompatActivity {
                             Common.LEDG_LIST.remove(id);
                         }
                         ((MainActivity) ct).refreshActivity();
+                        ((MainActivity) ct).finish();
                     }
 
                     @Override

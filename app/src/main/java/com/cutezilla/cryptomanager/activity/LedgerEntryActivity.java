@@ -260,9 +260,9 @@ public class LedgerEntryActivity extends AppCompatActivity {
         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
             @Override
             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                Intent intent = new Intent(LedgerEntryActivity.this,MainActivity.class);
-                startActivity(intent);
+
                 sweetAlertDialog.cancel();
+                finish();
 
             }
         });
