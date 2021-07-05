@@ -4,15 +4,24 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.cutezilla.cryptomanager.R;
+import com.cutezilla.cryptomanager.util.Common;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -22,6 +31,64 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+    }
+
+
+    public void deleteLedger(Context ct, int id){
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ct, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog.setCanceledOnTouchOutside(false);
+        sweetAlertDialog.setTitleText("Delete");
+        sweetAlertDialog.setContentText("Are you sure you want to Delete?");
+        sweetAlertDialog.setConfirmText("Yes");
+        sweetAlertDialog.setCancelText("No");
+        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.cancel();
+            }
+        });
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                Query myLedgerDeleteQuery = FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
+                        .orderByChild("ledgerEntry_id").equalTo(Common.removeSpecialCharacter(Common.LEDG_LIST.get(id).getLedgerEntry_id()));
+                Query myLedgerEntryDeleteQuery = FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
+                        .orderByChild("ledger_id").equalTo(Common.removeSpecialCharacter(Common.LEDG_LIST.get(id).getLedgerEntry_id()));
+                myLedgerDeleteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                        for (DataSnapshot ledgerSnapshot: snapshot.getChildren()){
+                            ledgerSnapshot.getRef().removeValue();
+                            Common.LEDG_LIST.remove(id);
+                        }
+                        ((MainActivity) ct).refreshActivity();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull  DatabaseError error) {
+
+                    }
+                });
+
+                myLedgerEntryDeleteQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                        for (DataSnapshot ledgerEntrySnap: snapshot.getChildren()){
+                            ledgerEntrySnap.getRef().removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull  DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+        sweetAlertDialog.show();
+
+
     }
 
     public boolean hasInternet(ConnectivityManager connectivity) {

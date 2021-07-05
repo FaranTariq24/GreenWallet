@@ -132,20 +132,23 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     }
 
     private void loadMainCardItems() {
-
+        Common.LEDG_LIST = new ArrayList<>();
         mainCardQuery = FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
                 .orderByChild("ledger_id").equalTo(Common.removeSpecialCharacter(Common.userAccount.getEmail()));
         FR_options = new FirebaseRecyclerOptions.Builder<Ledger>()
                 .setQuery(mainCardQuery, Ledger.class)
                 .build();
         FR_adapter = new FirebaseRecyclerAdapter<Ledger, LedgerViewHolder>(FR_options) {
+            @SuppressLint("SetTextI18n")
             @Override
             protected void onBindViewHolder(@NonNull  LedgerViewHolder holder, int i, @NonNull Ledger ledger) {
+
                 Common.LEDG_LIST.add(ledger);
                 holder.setViewData(ledger);
                 String dollar = percentageFormatD.format(ledger.getTotalInvested()+Float.parseFloat(tv_walletBalance.getText().toString()));
                 tv_walletBalance.setText(dollar);
                 tv_wl_am_pkr.setText(String.valueOf(Float.parseFloat(dollar)*160)+" RPS");
+
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
@@ -164,7 +167,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                         .inflate(R.layout.main_small_card, parent, false);
 //                int height = parent.getMeasuredHeight() / 2;
 //                itemView.setMinimumHeight(height);
-                return new LedgerViewHolder(itemView);
+
+                return new LedgerViewHolder(itemView,MainActivity.this);
             }
         };
         FR_adapter.startListening();
@@ -921,5 +925,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 ltv_loading.setVisibility(View.GONE);
             }
         });
+    }
+    public void refreshActivity(){
+        startActivity(getIntent());
     }
 }
