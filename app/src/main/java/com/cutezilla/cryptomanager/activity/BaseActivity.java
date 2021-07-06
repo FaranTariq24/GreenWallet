@@ -43,49 +43,71 @@ public class BaseActivity extends AppCompatActivity {
             Collections.reverse(Common.LEDG_ENTRY_LIST);
             Common.isReversed = true;
         }
-        Toast.makeText(ct,"Deleted: "+Common.LEDG_ENTRY_LIST.get(id).getLedgerEntry_id(),Toast.LENGTH_SHORT).show();
-        LedgerEntry lbe = Common.LEDG_ENTRY_LIST.get(id);
-
-        FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
-                .orderByChild("ledgerEntry_id").equalTo(Common.LEDG_ENTRY_LIST.get(id).getLedgerEntry_id())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull  DataSnapshot snapshot) {
-                        for (DataSnapshot ds: snapshot.getChildren()){
-                            ds.getRef().removeValue();
-                            Common.LEDG_ENTRY_LIST.remove(id);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull  DatabaseError error) {
-
-                    }
-                });
-
-
-        Ledger updatedLedger = new Ledger();
-        for (Ledger ld: Common.LEDG_LIST){
-            if (ld.getLedgerEntry_id().equals(lbe.getLedger_id())){
-                ld.setTotalCryptoAmount(ld.getTotalCryptoAmount()-lbe.getCryptoAmount());
-                ld.setTotalInvested(ld.getTotalInvested()-lbe.getInvestedAmount());
-                updatedLedger = ld;
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ct, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog.setCanceledOnTouchOutside(false);
+        sweetAlertDialog.setTitleText("Delete");
+        sweetAlertDialog.setContentText("Are you sure you want to Delete?");
+        sweetAlertDialog.setConfirmText("Yes");
+        sweetAlertDialog.setCancelText("No");
+        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.cancel();
             }
-        }
-        FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
-                .child(lbe.getLedger_id())
-                .setValue(updatedLedger)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull  Task<Void> task) {
-                        Toast.makeText(ct,"Ledger updated",Toast.LENGTH_SHORT).show();
-                        ((HistoryActivity) ct).refreshActivity();
-                        ((HistoryActivity) ct).finish();
+        });
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                Toast.makeText(ct,"Deleted: "+Common.LEDG_ENTRY_LIST.get(id).getLedgerEntry_id(),Toast.LENGTH_SHORT).show();
+                LedgerEntry lbe = Common.LEDG_ENTRY_LIST.get(id);
+
+                FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
+                        .orderByChild("ledgerEntry_id").equalTo(Common.LEDG_ENTRY_LIST.get(id).getLedgerEntry_id())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                                for (DataSnapshot ds: snapshot.getChildren()){
+                                    ds.getRef().removeValue();
+                                    Common.LEDG_ENTRY_LIST.remove(id);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull  DatabaseError error) {
+
+                            }
+                        });
+
+
+                Ledger updatedLedger = new Ledger();
+                for (Ledger ld: Common.LEDG_LIST){
+                    if (ld.getLedgerEntry_id().equals(lbe.getLedger_id())){
+                        if (lbe.getStatus().equals(Common.STR_BUY)){
+                            ld.setTotalCryptoAmount(ld.getTotalCryptoAmount()-lbe.getCryptoAmount());
+                            ld.setTotalInvested(ld.getTotalInvested()-lbe.getInvestedAmount());
+                        }else if (lbe.getStatus().equals(Common.STR_SELL)){
+                            ld.setTotalCryptoAmount(ld.getTotalCryptoAmount()+lbe.getCryptoAmount());
+                            ld.setTotalInvested(ld.getTotalInvested()+lbe.getInvestedAmount());
+                        }
+                        updatedLedger = ld;
                     }
-                });
+                }
+                FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
+                        .child(lbe.getLedger_id())
+                        .setValue(updatedLedger)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull  Task<Void> task) {
+                                Toast.makeText(ct,"Ledger updated",Toast.LENGTH_SHORT).show();
+                                sweetAlertDialog.dismiss();
+                                ((HistoryActivity) ct).refreshActivity();
+                                ((HistoryActivity) ct).finish();
+                            }
+                        });
+            }
+        });
 
-
-
+        sweetAlertDialog.show();
     }
 
     public void deleteLedger(Context ct, int id){
