@@ -1,8 +1,10 @@
 package com.cutezilla.cryptomanager.viewHolder;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cutezilla.cryptomanager.Interface.ItemClickListener;
 import com.cutezilla.cryptomanager.R;
+import com.cutezilla.cryptomanager.activity.BaseActivity;
 import com.cutezilla.cryptomanager.model.LedgerEntry;
 import com.cutezilla.cryptomanager.util.Common;
 
@@ -17,12 +20,14 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
     ItemClickListener itemClickListener;
     View view;
     TextView status,time,maxBuy,minBuy,totalCur,totalInvested,tv_buy_price,bbAt;
+    ImageView iv_delete;
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
-    public LedgerEntryViewHolder(@NonNull View itemView) {
+    public LedgerEntryViewHolder(@NonNull View itemView, Context ct) {
         super(itemView);
 
+        iv_delete = itemView.findViewById(R.id.iv_delete);
         view = (View) itemView.findViewById(R.id.v_status);
         status = (TextView) itemView.findViewById(R.id.tv_status);
         time = (TextView) itemView.findViewById(R.id.tv_time);
@@ -32,6 +37,16 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
         totalInvested = (TextView) itemView.findViewById(R.id.tv_total_investedAmount);
         tv_buy_price = (TextView) itemView.findViewById(R.id.tv_buy_price);
         bbAt = (TextView) itemView.findViewById(R.id.bbAt);
+
+        iv_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(ct,String.valueOf(getAdapterPosition()),Toast.LENGTH_SHORT).show();
+                BaseActivity baseActivity = new BaseActivity();
+                baseActivity.deleteLedgerEntry(ct,getAdapterPosition());
+
+            }
+        });
     }
 
     @Override

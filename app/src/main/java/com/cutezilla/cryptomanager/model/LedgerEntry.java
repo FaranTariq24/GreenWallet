@@ -1,27 +1,21 @@
 package com.cutezilla.cryptomanager.model;
 
 public class LedgerEntry {
-    private String ledger_id, date, currency,status;
+    private String ledger_id, date, currency,status,ledgerEntry_id;
     private float investedAmount, price, cryptoAmount;
 
     public LedgerEntry() {
     }
 
-    public LedgerEntry(String ledger_id, String date, String currency, float investedAmount, float buyingPrice, float cryptoAmount, String bought) {
+    public LedgerEntry(String ledger_id, String date, String currency, String status, String ledgerEntry_id, float investedAmount, float price, float cryptoAmount) {
         this.ledger_id = ledger_id;
         this.date = date;
         this.currency = currency;
-        this.investedAmount = investedAmount;
-        this.price = buyingPrice;
-        this.cryptoAmount = cryptoAmount;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
         this.status = status;
+        this.ledgerEntry_id = ledgerEntry_id;
+        this.investedAmount = investedAmount;
+        this.price = price;
+        this.cryptoAmount = cryptoAmount;
     }
 
     public String getLedger_id() {
@@ -46,6 +40,22 @@ public class LedgerEntry {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getLedgerEntry_id() {
+        return ledgerEntry_id;
+    }
+
+    public void setLedgerEntry_id(String ledgerEntry_id) {
+        this.ledgerEntry_id = ledgerEntry_id;
     }
 
     public float getInvestedAmount() {

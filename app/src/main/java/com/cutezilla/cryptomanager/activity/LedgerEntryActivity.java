@@ -153,6 +153,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
         strCryptoAmount = String.valueOf(percentageFormat.format(Float.parseFloat(strInvestedAmount)/Float.parseFloat(strBuyPrice)));
 
         LedgerEntry LBE = new LedgerEntry();
+        String LBE_ID = FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry).push().getKey();
         String ledgerBuyId = Common.createLedgerEntryId(strCurrency);
         LBE.setLedger_id(ledgerBuyId);
         LBE.setDate(strBuyDate);
@@ -161,9 +162,11 @@ public class LedgerEntryActivity extends AppCompatActivity {
         LBE.setPrice(Float.parseFloat(strBuyPrice));
         LBE.setInvestedAmount(Float.parseFloat(strInvestedAmount));
         LBE.setStatus(Common.STR_BUY);
+        LBE.setLedgerEntry_id(LBE_ID);
+
 
                 FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
-                        .child(Objects.requireNonNull(FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry).push().getKey()))
+                        .child(Objects.requireNonNull(LBE_ID))
                         .setValue(LBE).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

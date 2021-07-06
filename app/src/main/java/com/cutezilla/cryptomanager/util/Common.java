@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.cutezilla.cryptomanager.model.Account;
 import com.cutezilla.cryptomanager.model.Ledger;
+import com.cutezilla.cryptomanager.model.LedgerEntry;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -38,6 +39,8 @@ public class Common {
     public  static Ledger STR_SELECTED_LEDGER_INT;
 
     public static List<Ledger> LEDG_LIST = new ArrayList<>();
+    public static List<LedgerEntry> LEDG_ENTRY_LIST = new ArrayList<>();
+    public static boolean isReversed;
 
 
 

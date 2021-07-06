@@ -96,6 +96,12 @@
                     android:textColor="@color/grey_40" />
 
             </LinearLayout>
-
+            <ImageView
+                android:id="@+id/iv_delete"
+                android:layout_marginLeft="6dp"
+                android:layout_width="30dp"
+                android:paddingRight="10dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/delete" />
         </LinearLayout>
 </androidx.cardview.widget.CardView>

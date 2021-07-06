@@ -35,6 +35,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -47,19 +48,32 @@ public class HistoryActivity extends AppCompatActivity {
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
     DecimalFormat percentageFormatD = new DecimalFormat("00.00");
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
 
-
+        Common.isReversed = false;
+        Common.LEDG_ENTRY_LIST = new ArrayList<>();
         initUiComponent();
         loadCardItem();
         headerComponents();
         populateUiComponent();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(HistoryActivity.this,MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void refreshActivity(){
+        startActivity(getIntent());
+    }
     private void populateUiComponent() {
+
         tv_inv_amount.setText(String.valueOf(percentageFormatD.format(Common.STR_SELECTED_LEDGER_INT.getTotalInvested())));
         tv_walletBalance.setText(String.valueOf(percentageFormat.format(Common.STR_SELECTED_LEDGER_INT.getTotalCryptoAmount())));
         tv_wl_am_pkr.setText(percentageFormatD.format(Common.STR_SELECTED_LEDGER_INT.getTotalInvested()*160)+" RPS");
@@ -152,13 +166,15 @@ public class HistoryActivity extends AppCompatActivity {
             public LedgerEntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.history_small_card, parent, false);
-                return new LedgerEntryViewHolder(itemView);
+                return new LedgerEntryViewHolder(itemView,HistoryActivity.this);
             }
+
 
             @SuppressLint("SetTextI18n")
             @Override
             protected void onBindViewHolder(@NonNull LedgerEntryViewHolder holder, int i, @NonNull LedgerEntry ledgerEntry) {
                 holder.setViewData(ledgerEntry);
+                Common.LEDG_ENTRY_LIST.add(ledgerEntry);
 //                if (ledgerEntry.getStatus().equals(Common.STR_BUY)){
 //                    tv_walletBalance.setText( String.valueOf(Float.parseFloat(tv_walletBalance.getText().toString())+ ledgerEntry.getCryptoAmount()));
 //                    tv_inv_amount.setText(String.valueOf(Float.parseFloat(tv_inv_amount.getText().toString())+ledgerEntry.getInvestedAmount()));
