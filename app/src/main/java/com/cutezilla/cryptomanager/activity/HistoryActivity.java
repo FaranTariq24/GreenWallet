@@ -66,6 +66,7 @@ public class HistoryActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(HistoryActivity.this,MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 
@@ -166,7 +167,7 @@ public class HistoryActivity extends AppCompatActivity {
             public LedgerEntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.history_small_card, parent, false);
-                return new LedgerEntryViewHolder(itemView,HistoryActivity.this);
+                return new LedgerEntryViewHolder(itemView,HistoryActivity.this,true);
             }
 
 

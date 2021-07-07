@@ -275,16 +275,13 @@
 
                     </LinearLayout>
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:id="@+id/iv_history"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_medium"
-                        android:layout_marginTop="@dimen/spacing_middle"
-                        android:gravity="center"
-                        android:text="Today"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                        android:textColor="@color/grey_5"
-                        app:fontFamily="sans-serif-medium" />
+                        android:src="@drawable/ic_baseline_history_edu_24"
+                        android:layout_gravity="right"
+                        />
 
 
 

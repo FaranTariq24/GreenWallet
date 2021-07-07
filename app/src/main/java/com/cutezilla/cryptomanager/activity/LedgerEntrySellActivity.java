@@ -179,6 +179,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
         LBE.setInvestedAmount(Float.parseFloat(strInvestedAmount));
         LBE.setStatus(Common.STR_SELL);
         LBE.setLedgerEntry_id(LBE_ID);
+        LBE.setEmail(Common.email);
         FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
                 .child(Objects.requireNonNull(LBE_ID))
                 .setValue(LBE).addOnCompleteListener(new OnCompleteListener<Void>() {

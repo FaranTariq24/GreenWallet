@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,13 +99,12 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     String  email;
     CardView cv_btn_buy, cv_btn_sell;
     LottieAnimationView ltv_loading;
-    long date_ship_millis;
     TextView tv_walletBalance,tv_wl_am_pkr;
     RecyclerView recyclerView;
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
     DecimalFormat percentageFormatD = new DecimalFormat("00.00");
     SweetAlertDialog progressBar2;
-
+    ImageView iv_history;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -242,6 +242,14 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         ltv_loading = (LottieAnimationView) findViewById(R.id.lav_loading);
         mAuth = FirebaseAuth.getInstance();
+        iv_history = findViewById(R.id.iv_history);
+        iv_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,AllHistoryActivity.class);
+                startActivity(intent);
+            }
+        });
 
         cv_btn_buy.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -364,16 +372,20 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             if (id == R.id.nav_changepassword) {
             showChangePasswordDialog();
         }
-            else if (id == R.id.nav_addCurrency) {
-                showAddCurrencyPopup();
+            else if (id==R.id.nav_history){
+                Intent intent = new Intent(MainActivity.this,AllHistoryActivity.class);
+                startActivity(intent);
             }
-            else if (id == R.id.nav_terms) {
-            Toast.makeText(this, "Terms and condition", Toast.LENGTH_SHORT).show();
-        }
-            else if (id == R.id.nav_feedback) {
-            Intent intent = new Intent(MainActivity.this, LedgerEntrySellActivity.class);
-            startActivity(intent);
-        }
+//            else if (id == R.id.nav_addCurrency) {
+//                showAddCurrencyPopup();
+//            }
+//            else if (id == R.id.nav_terms) {
+//            Toast.makeText(this, "Terms and condition", Toast.LENGTH_SHORT).show();
+//        }
+//            else if (id == R.id.nav_feedback) {
+//            Intent intent = new Intent(MainActivity.this, LedgerEntrySellActivity.class);
+//            startActivity(intent);
+//        }
 //            else {
 //                Toast.makeText(IndexActivity.this, "Device is already attached", Toast.LENGTH_SHORT).show();
 //            }

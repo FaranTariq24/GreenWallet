@@ -5,32 +5,32 @@
 
     <group android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/profile"
-            android:title="My Profile" />
+<!--        <item-->
+<!--            android:id="@+id/nav_profile"-->
+<!--            android:icon="@drawable/profile"-->
+<!--            android:title="My Profile" />-->
 
         <item
             android:id="@+id/nav_changepassword"
             android:icon="@drawable/changepassword"
             android:title="Change Password" />
 
-        <item
-            android:id="@+id/nav_addCurrency"
-            android:icon="@drawable/adddevice"
-            android:title="Add Currency" />
+<!--        <item-->
+<!--            android:id="@+id/nav_addCurrency"-->
+<!--            android:icon="@drawable/adddevice"-->
+<!--            android:title="Add Currency" />-->
     </group>
 
     <item android:title="">
         <menu>
             <item
-                android:id="@+id/nav_terms"
+                android:id="@+id/nav_history"
                 android:icon="@drawable/termsandcondition"
-                android:title="Terms and Conditions" />
+                android:title="History" />
             <item
                 android:id="@+id/nav_faqs"
                 android:icon="@drawable/faqs"
-                android:title="FAQs" />
+                android:title="chat-coming soon" />
             <item
                 android:id="@+id/nav_feedback"
                 android:icon="@drawable/rating2"
@@ -41,15 +41,15 @@
 
     <item android:title="">
         <menu>
-            <item
-                android:id="@+id/nav_contact"
-                android:icon="@drawable/contactus"
-                android:title="Contact Us" />
-            <item
-                android:id="@+id/nav_about_us"
-                android:icon="@drawable/ic_perm_device_info"
-                android:title="About Us"
-                />
+<!--            <item-->
+<!--                android:id="@+id/nav_contact"-->
+<!--                android:icon="@drawable/contactus"-->
+<!--                android:title="Contact Us" />-->
+<!--            <item-->
+<!--                android:id="@+id/nav_about_us"-->
+<!--                android:icon="@drawable/ic_perm_device_info"-->
+<!--                android:title="About Us"-->
+<!--                />-->
             <item
                 android:id="@+id/nav_logout"
                 android:icon="@drawable/logout"

@@ -163,6 +163,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
         LBE.setInvestedAmount(Float.parseFloat(strInvestedAmount));
         LBE.setStatus(Common.STR_BUY);
         LBE.setLedgerEntry_id(LBE_ID);
+        LBE.setEmail(Common.email);
 
 
                 FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)

@@ -24,7 +24,7 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
-    public LedgerEntryViewHolder(@NonNull View itemView, Context ct) {
+    public LedgerEntryViewHolder(@NonNull View itemView, Context ct,boolean deleteStatus) {
         super(itemView);
 
         iv_delete = itemView.findViewById(R.id.iv_delete);
@@ -38,6 +38,9 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
         tv_buy_price = (TextView) itemView.findViewById(R.id.tv_buy_price);
         bbAt = (TextView) itemView.findViewById(R.id.bbAt);
 
+        if (!deleteStatus){
+            iv_delete.setVisibility(View.GONE);
+        }
         iv_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
