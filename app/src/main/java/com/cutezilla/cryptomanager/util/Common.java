@@ -13,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class Common {
     public static List<Ledger> LEDG_LIST = new ArrayList<>();
     public static List<LedgerEntry> LEDG_ENTRY_LIST = new ArrayList<>();
     public static boolean isReversed;
+    public static final String STR_NO_DATA = "Record not found";
 
 
 
@@ -142,6 +144,23 @@ public class Common {
 
         }
         return response;
+    }
+
+    public static double roundOf(double d){
+
+            DecimalFormat twoDForm = new DecimalFormat("#.##");
+            return Double.valueOf(twoDForm.format(d));
+    }
+    public static boolean isDouble(String number){
+        try
+        {
+            Double.parseDouble(number);
+            return true;
+        }
+        catch(NumberFormatException e)
+        {
+            return false;
+        }
     }
 
 }

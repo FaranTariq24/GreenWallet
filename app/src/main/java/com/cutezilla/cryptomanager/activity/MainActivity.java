@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     String  email;
     CardView cv_btn_buy, cv_btn_sell;
     LottieAnimationView ltv_loading;
-    TextView tv_walletBalance,tv_wl_am_pkr;
+    TextView tv_walletBalance,tv_wl_am_pkr,tv_navbar_name,tv_navbar_email;
     RecyclerView recyclerView;
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
     DecimalFormat percentageFormatD = new DecimalFormat("00.00");
@@ -272,6 +272,11 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     }
 
     private void headerComponents() {
+
+        View headerView = navigationView.getHeaderView(0);
+        navigationView.setNavigationItemSelectedListener(this);
+        tv_navbar_name = headerView.findViewById(R.id.tv_navbar_name);
+        tv_navbar_email = headerView.findViewById(R.id.tv_navbar_email);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         View backPressed = findViewById(R.id.back_btn);
         backPressed.setVisibility(View.GONE);
@@ -597,10 +602,13 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
                     if (account != null) {
                         //do something
+                        tv_navbar_name.setText(account.getName());
+                        tv_navbar_email.setText(account.getEmail());
                         ltv_loading.setVisibility(View.GONE);
+                        loadMainCardItems();
                     }
                 }
-                loadMainCardItems();
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     if (getSupportActionBar() != null) {
                         getSupportActionBar().show();

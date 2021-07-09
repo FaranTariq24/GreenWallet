@@ -7,6 +7,8 @@ import androidx.appcompat.widget.AppCompatButton;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -25,11 +27,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.cutezilla.cryptomanager.R;
-import com.cutezilla.cryptomanager.adapter.CurrencyListAdapter;
 import com.cutezilla.cryptomanager.model.Coin;
 import com.cutezilla.cryptomanager.model.Ledger;
 import com.cutezilla.cryptomanager.model.LedgerEntry;
-import com.cutezilla.cryptomanager.services.CoinGeckoService;
 import com.cutezilla.cryptomanager.services.QueryService;
 import com.cutezilla.cryptomanager.util.Common;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,18 +39,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -70,12 +64,13 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
     private SearchableSpinner coinSpinner, currencySpinner ;
     private Button bt_curr_max_btn,buyDate,bt_max_btn;
     private EditText et_buyprice,et_investedamount;
-    private TextView tv_selectedcoin,tv_selectedCurrency,tv_selectedCurrencyPrice,tv_coin_vr,tv_availableUsd;
+    private TextView tv_selectedcoin,tv_selectedCurrency,tv_selectedCurrencyPrice,tv_coin_vr, tv_inves, tv_avail,tv_profit_loss,tv_profit_loss_des;
     String selectedCoinId = null;
     String selectedCurrency = null;
     SweetAlertDialog progressBar;
     long date_ship_millis;
     Calendar calendar;
+    String selectedInvestment;
     private boolean submitStatus = false;
     private List<Coin> coinList= new ArrayList<>();
     private List<String> coinSymbolList = new ArrayList<>();
@@ -83,7 +78,9 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
     private AppCompatButton bt_cancel,bt_submit;
     BaseActivity baseActivity;
     QueryService queryService = new QueryService();
+    DecimalFormat oneDFormat = new DecimalFormat("00.0");
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
+    Ledger selectedLedger;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         calendar = Calendar.getInstance();
@@ -105,8 +102,11 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
     }
 
     private void intUiComponent() {
+        tv_profit_loss_des = findViewById(R.id.tv_profit_loss_des);
+        tv_profit_loss = findViewById(R.id.tv_profit_loss);
         bt_max_btn = findViewById(R.id.bt_max_btn);
-        tv_availableUsd = findViewById(R.id.tv_availableUsd);
+        tv_avail = findViewById(R.id.tv_investedUsd);
+        tv_inves = findViewById(R.id.tv_availableUsd);
         et_investedamount = findViewById(R.id.et_investedamount);
         bt_cancel = findViewById(R.id.bt_cancel);
         bt_submit = findViewById(R.id.bt_submit);
@@ -120,6 +120,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
         coinSpinner = (SearchableSpinner) findViewById(R.id.ss_coin_id);
         currencySpinner = (SearchableSpinner) findViewById(R.id.ss_currency_id);
         et_buyprice.requestFocus();
+
         buyDate.setText(dateFormat.format(calendar.getTime()));
         buyDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,10 +151,55 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
         bt_max_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                et_investedamount.setText(tv_availableUsd.getText().toString());
+                et_investedamount.setText(tv_avail.getText().toString());
+            }
+        });
+        et_buyprice.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @SuppressLint("ResourceAsColor")
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //tv_selectedCurrencyPrice
+                //tv_availableUsd
+                //tv_selectedCurrencyPrice/tv_availableUsd
+                double profitLoss=0;
+                double investedAmount=0;
+                double availableAmount = 0;
+                double buyPrice=0;
+                if (Common.isDouble(tv_inves.getText().toString())){
+                    investedAmount = Double.parseDouble(tv_inves.getText().toString());
+                }
+                if (Common.isDouble(et_buyprice.getText().toString())){
+                    buyPrice = Double.parseDouble(et_buyprice.getText().toString());
+                }
+                if (Common.isDouble(tv_avail.getText().toString())){
+                    availableAmount = Float.parseFloat(tv_avail.getText().toString());
+                }
+
+                String avalAmount = oneDFormat.format(Common.roundOf(selectedLedger.getTotalCryptoAmount()*buyPrice));
+
+                    tv_avail.setText(avalAmount);
+
+                profitLoss = Float.parseFloat(tv_avail.getText().toString())-investedAmount;
+                if (profitLoss<0){
+                    tv_profit_loss_des.setText("Loss: ");
+                }else{
+                    tv_profit_loss_des.setText("Profit: ");
+                }
+                tv_profit_loss.setText(oneDFormat.format(profitLoss));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
     }
+
 
     private void submitData() {
         if (buyDate.getText().toString().equals("") || coinSpinner.getSelectedItem().toString().equals("") || currencySpinner.getSelectedItem().toString().equals("")
@@ -458,12 +504,16 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
         if (!Common.LEDG_LIST.isEmpty()){
             for (Ledger ld: Common.LEDG_LIST){
                 if (ld.getCurrency_name().equals(tv_coin_vr.getText().toString())){
-                    tv_availableUsd.setText(String.valueOf(ld.getTotalInvested()));
+                    selectedInvestment = String.valueOf(ld.getTotalInvested());
+                    selectedLedger = ld;
+                    tv_inves.setText(String.valueOf(ld.getTotalInvested()));
+                    tv_avail.setText(String.valueOf(ld.getTotalInvested()));
                     submitStatus = true;
                     progressBar.dismiss();
                     return;
                 }else{
-                    tv_availableUsd.setText("Kindly select the available coin/currency for sale");
+                    tv_inves.setText(Common.STR_NO_DATA);
+                    tv_avail.setText("--/--");
                     submitStatus = false;
                 }
 

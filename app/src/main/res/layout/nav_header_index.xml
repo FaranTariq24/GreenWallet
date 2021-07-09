@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:text="Faran Tariq"
+            android:text="Name"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             />
 
@@ -43,7 +43,7 @@
             android:id="@+id/tv_navbar_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="farantariq24@mail.com"
+            android:text="Email"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             />
 
