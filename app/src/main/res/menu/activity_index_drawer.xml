@@ -15,10 +15,10 @@
             android:icon="@drawable/changepassword"
             android:title="Change Password" />
 
-<!--        <item-->
-<!--            android:id="@+id/nav_addCurrency"-->
-<!--            android:icon="@drawable/adddevice"-->
-<!--            android:title="Add Currency" />-->
+        <item
+            android:id="@+id/nav_allCoin"
+            android:icon="@drawable/btc"
+            android:title="All Coins" />
     </group>
 
     <item android:title="">

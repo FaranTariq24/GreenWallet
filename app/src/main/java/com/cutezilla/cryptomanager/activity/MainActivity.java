@@ -1,6 +1,7 @@
 package com.cutezilla.cryptomanager.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         iniUiComponents();
         headerComponents();
@@ -379,6 +381,9 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         }
             else if (id==R.id.nav_history){
                 Intent intent = new Intent(MainActivity.this,AllHistoryActivity.class);
+                startActivity(intent);
+            }else if (id == R.id.nav_allCoin){
+                Intent intent = new Intent(MainActivity.this,AllCoinActivity.class);
                 startActivity(intent);
             }
 //            else if (id == R.id.nav_addCurrency) {
