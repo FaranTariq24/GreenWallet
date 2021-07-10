@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.cutezilla.cryptomanager.R;
 import com.cutezilla.cryptomanager.adapter.AllCoinAdapter;
 import com.cutezilla.cryptomanager.application.MyApplication;
 import com.cutezilla.cryptomanager.model.AllCoin;
+import com.cutezilla.cryptomanager.util.Common;
 import com.cutezilla.cryptomanager.util.MyDividerItemDecoration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -47,9 +49,8 @@ public class AllCoinActivity extends AppCompatActivity implements AllCoinAdapter
     private List<AllCoin> contactList;
     private AllCoinAdapter mAdapter;
     private SearchView searchView;
-    private RequestQueue mRequestQueue;
     // url to fetch contacts json
-    private static final String URL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false";
+    private static final String URL = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,8 +191,10 @@ public class AllCoinActivity extends AppCompatActivity implements AllCoinAdapter
     }
 
     @Override
-    public void onContactSelected(AllCoin contact) {
-        Toast.makeText(getApplicationContext(), "Selected: " + contact.getSymbol() + ", " , Toast.LENGTH_LONG).show();
+    public void onContactSelected(AllCoin coin) {
+        Common.SELECTED_COIN_DES = coin;
+        Intent intent = new Intent(AllCoinActivity.this,CoinDetailActivity.class);
+        startActivity(intent);
     }
 
 }

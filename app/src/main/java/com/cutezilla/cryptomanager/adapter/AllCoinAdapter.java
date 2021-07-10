@@ -66,7 +66,7 @@ public class AllCoinAdapter extends RecyclerView.Adapter<AllCoinAdapter.MyViewHo
         final AllCoin allCoin = allCoinListFiltered.get(position);
         holder.name.setText(allCoin.getSymbol());
         holder.phone.setText(allCoin.getName());
-        holder.current_price.setText(allCoin.getCurrent_price());
+        holder.current_price.setText(String.valueOf(allCoin.getCurrent_price()));
 
         Glide.with(context)
                 .load(allCoin.getImage())

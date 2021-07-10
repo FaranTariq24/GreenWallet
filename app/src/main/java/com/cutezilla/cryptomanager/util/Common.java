@@ -5,6 +5,7 @@ import android.util.Patterns;
 import android.widget.Toast;
 
 import com.cutezilla.cryptomanager.model.Account;
+import com.cutezilla.cryptomanager.model.AllCoin;
 import com.cutezilla.cryptomanager.model.Ledger;
 import com.cutezilla.cryptomanager.model.LedgerEntry;
 
@@ -43,6 +44,8 @@ public class Common {
     public static List<LedgerEntry> LEDG_ENTRY_LIST = new ArrayList<>();
     public static boolean isReversed;
     public static final String STR_NO_DATA = "Record not found";
+    public static AllCoin SELECTED_COIN_DES;
+
 
 
 
