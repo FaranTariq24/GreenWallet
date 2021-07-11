@@ -405,6 +405,8 @@ public class LedgerEntryActivity extends AppCompatActivity {
 
     private void fetchMarketPrice(String coin, String currency){
 
+        progressBar.dismiss();
+        progressBar = baseActivity.progressDialog(LedgerEntryActivity.this, "Please wait", "Fetching currency data....");
         selectedCurrency = currency;
         Coin selectedCoin = new Coin();
         for (Coin co:coinList){
@@ -423,6 +425,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
 //                        Log.e("HttpClient", "success! response: " + response.toString());
 //                        Log.i("VOLLEY", response);
                         try {
+                            progressBar.dismiss();
                             updateDollar(new JSONObject(response));
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -180,18 +180,23 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
                     availableAmount = Float.parseFloat(tv_avail.getText().toString());
                 }
 
-                String avalAmount = oneDFormat.format(Common.roundOf(selectedLedger.getTotalCryptoAmount()*buyPrice));
-
+                if (selectedLedger!=null){
+                    String avalAmount = oneDFormat.format(Common.roundOf(selectedLedger.getTotalCryptoAmount()*buyPrice));
                     tv_avail.setText(avalAmount);
-
-                profitLoss = Float.parseFloat(tv_avail.getText().toString())-investedAmount;
-                if (profitLoss<0){
-                    tv_profit_loss_des.setText("Loss: ");
-                }else{
-                    tv_profit_loss_des.setText("Profit: ");
+                    profitLoss = Float.parseFloat(tv_avail.getText().toString())-investedAmount;
+                    if (profitLoss<0){
+                        tv_profit_loss_des.setText("Loss: ");
+                    }else{
+                        tv_profit_loss_des.setText("Profit: ");
+                    }
+                    tv_profit_loss.setText(oneDFormat.format(profitLoss));
                 }
-                tv_profit_loss.setText(oneDFormat.format(profitLoss));
-            }
+                }
+
+
+
+
+
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -448,7 +453,8 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
     }
 
     private void fetchMarketPrice(String coin, String currency){
-
+        progressBar.dismiss();
+        progressBar =  baseActivity.progressDialog(LedgerEntrySellActivity.this, "Please wait", "Updating record....");
         if (coin.equals("--/--") && currency.equals("--/--")){
             return;
         }
@@ -470,6 +476,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
 //                        Log.e("HttpClient", "success! response: " + response.toString());
 //                        Log.i("VOLLEY", response);
                         try {
+                            progressBar.dismiss();
                             updateDollar(new JSONObject(response));
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -500,6 +507,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
 
     }
     private void updateDollar(JSONObject jsonObject) throws JSONException {
+        selectedLedger = null;
         tv_selectedCurrencyPrice.setText( jsonObject.getJSONObject(selectedCoinId).get(selectedCurrency).toString());
         if (!Common.LEDG_LIST.isEmpty()){
             for (Ledger ld: Common.LEDG_LIST){
@@ -514,6 +522,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
                 }else{
                     tv_inves.setText(Common.STR_NO_DATA);
                     tv_avail.setText("--/--");
+                    tv_profit_loss.setText("--/--");
                     submitStatus = false;
                 }
 
