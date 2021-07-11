@@ -30,9 +30,9 @@
                 android:icon="@drawable/btc"
                 android:title="All Coins" />
             <item
-                android:id="@+id/nav_"
+                android:id="@+id/nav_topTrending"
                 android:icon="@drawable/btc"
-                android:title="Top searched coins" />
+                android:title="Top 7 trending coin" />
             <item
 
                 android:icon="@drawable/btc"

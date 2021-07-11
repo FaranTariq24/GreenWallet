@@ -9,7 +9,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.CoinDetailActivity"></activity>
+        <activity android:name=".activity.TrendingCoinActivity"></activity>
+        <activity android:name=".activity.CoinDetailActivity" />
         <activity
             android:name=".activity.AllCoinActivity"
             android:theme="@style/MainPage">
@@ -38,7 +39,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/MainPage"></activity>
+            android:theme="@style/MainPage" />
     </application>
 
 </manifest>

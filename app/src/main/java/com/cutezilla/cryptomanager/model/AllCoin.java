@@ -1,6 +1,7 @@
 package com.cutezilla.cryptomanager.model;
 
 import java.util.Date;
+import java.util.List;
 
 public class AllCoin {
 
@@ -29,6 +30,15 @@ public class AllCoin {
     public double atl_change_percentage;
     public Date atl_date;
     public Date last_updated;
+    public List<Coins> coins;
+
+    public List<Coins> getCoins() {
+        return coins;
+    }
+
+    public void setCoins(List<Coins> coins) {
+        this.coins = coins;
+    }
 
     public String getId() {
         return id;
