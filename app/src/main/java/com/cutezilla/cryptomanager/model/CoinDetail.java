@@ -279,40 +279,7 @@ class Public_interest_stats {
         this.bing_matches = bing_matches;
     }
 }
-class Image {
-    private String thumb;
-    private String small;
-    private String large;
 
-
-    // Getter Methods
-
-    public String getThumb() {
-        return thumb;
-    }
-
-    public String getSmall() {
-        return small;
-    }
-
-    public String getLarge() {
-        return large;
-    }
-
-    // Setter Methods
-
-    public void setThumb(String thumb) {
-        this.thumb = thumb;
-    }
-
-    public void setSmall(String small) {
-        this.small = small;
-    }
-
-    public void setLarge(String large) {
-        this.large = large;
-    }
-}
 class Links {
     ArrayList < String > homepage = new ArrayList < String > ();
     ArrayList < String > blockchain_site = new ArrayList < String > ();

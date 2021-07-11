@@ -35,6 +35,7 @@
                 android:title="Top 7 trending coin" />
             <item
 
+                android:id="@+id/nav_crypto_news"
                 android:icon="@drawable/btc"
                 android:title="Coin news" />
 

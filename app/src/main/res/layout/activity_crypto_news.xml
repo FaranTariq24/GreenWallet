@@ -4,19 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/green_400"
-    tools:context=".activity.AllHistoryActivity">
+    tools:context=".activity.CryptoNewsActivity">
     <include
         android:id="@+id/header"
         layout="@layout/header"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:padding="10dp"
-        android:id="@+id/rc_all_history"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@+id/header"
         tools:layout_editor_absoluteX="0dp" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

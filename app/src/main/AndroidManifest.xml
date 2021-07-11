@@ -9,7 +9,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.TrendingCoinActivity"></activity>
+        <activity android:name=".activity.CryptoNewsDisplayActivity"></activity>
+        <activity android:name=".activity.CryptoNewsActivity" />
+        <activity android:name=".activity.TrendingCoinActivity" />
         <activity android:name=".activity.CoinDetailActivity" />
         <activity
             android:name=".activity.AllCoinActivity"

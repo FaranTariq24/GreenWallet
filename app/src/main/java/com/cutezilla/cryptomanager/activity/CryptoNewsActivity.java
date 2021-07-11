@@ -7,38 +7,28 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.cutezilla.cryptomanager.R;
 import com.cutezilla.cryptomanager.adapter.AllCoinAdapter;
 import com.cutezilla.cryptomanager.adapter.CoinsAdapter;
+import com.cutezilla.cryptomanager.adapter.NewsAdapter;
 import com.cutezilla.cryptomanager.application.MyApplication;
 import com.cutezilla.cryptomanager.model.AllCoin;
-import com.cutezilla.cryptomanager.model.CoinDetail;
 import com.cutezilla.cryptomanager.model.Coins;
+import com.cutezilla.cryptomanager.model.StatusUpdate;
 import com.cutezilla.cryptomanager.util.Common;
-import com.cutezilla.cryptomanager.util.JsonUtil;
 import com.cutezilla.cryptomanager.util.MyDividerItemDecoration;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,20 +38,24 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class TrendingCoinActivity extends AppCompatActivity implements CoinsAdapter.CoinAdapterListener{
+public class CryptoNewsActivity extends AppCompatActivity implements NewsAdapter.NewsAdapterListener {
 
-    private static final String TAG = AllCoinActivity.class.getSimpleName();
+
+
+    private static final String TAG = CryptoNewsActivity.class.getSimpleName();
     private RecyclerView recyclerView;
-    private List<Coins> contactList;
-    private CoinsAdapter mAdapter;
+    private NewsAdapter mAdapter;
+    private SearchView searchView;
 
-    private static final String URL = "https://api.coingecko.com/api/v3/search/trending";
-
-
+    private static final String URL = "https://api.coingecko.com/api/v3/status_updates";
+    private List<StatusUpdate> contactList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trending_coin);
+        setContentView(R.layout.activity_crypto_news);
+
+
+
         recyclerView = findViewById(R.id.recycler_view);
         contactList = new ArrayList<>();
 
@@ -72,9 +66,8 @@ public class TrendingCoinActivity extends AppCompatActivity implements CoinsAdap
         recyclerView.addItemDecoration(new MyDividerItemDecoration(this, DividerItemDecoration.VERTICAL, 36));
 
 
-        fetchContacts();
+        fetchData();
         headerComponents();
-
     }
     private void headerComponents() {
 
@@ -90,10 +83,11 @@ public class TrendingCoinActivity extends AppCompatActivity implements CoinsAdap
         homeScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TrendingCoinActivity.this, LandingPage.class);
+                Intent intent = new Intent(CryptoNewsActivity.this, LandingPage.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
+
             }
         });
         View logout = findViewById(R.id.powerImage);
@@ -104,10 +98,7 @@ public class TrendingCoinActivity extends AppCompatActivity implements CoinsAdap
             }
         });
     }
-    /**
-     * fetches json by making http calls
-     */
-    private void fetchContacts() {
+    private void fetchData() {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 URL,
@@ -117,9 +108,8 @@ public class TrendingCoinActivity extends AppCompatActivity implements CoinsAdap
                     public void onResponse(JSONObject response) {
 
                         try {
-                            contactList.clear();
-                            contactList = Arrays.asList(new Gson().fromJson(response.getJSONArray("coins").toString(), Coins[].class));
-                            mAdapter = new CoinsAdapter(TrendingCoinActivity.this, contactList, TrendingCoinActivity.this);
+                            contactList = Arrays.asList(new Gson().fromJson(response.getJSONArray("status_updates").toString(), StatusUpdate[].class));
+                            mAdapter = new NewsAdapter(CryptoNewsActivity.this, contactList, CryptoNewsActivity.this);
                             recyclerView.setAdapter(mAdapter);
 
                         } catch (JSONException e) {
@@ -135,20 +125,11 @@ public class TrendingCoinActivity extends AppCompatActivity implements CoinsAdap
         MyApplication.getInstance().addToRequestQueue(request);
     }
 
-
-
-
     @Override
-    public void onBackPressed() {
-        // close search view on back button pressed
-        super.onBackPressed();
-    }
-
-
-
-    @Override
-    public void onContactSelected(Coins coin) {
-//        Toast.makeText(TrendingCoinActivity.this,coin.getItem().getSymbol(),Toast.LENGTH_SHORT).show();
+    public void onContactSelected(StatusUpdate statusUpdate) {
+        Common.SELECTED_NEWS = statusUpdate;
+        Intent intent = new Intent(CryptoNewsActivity.this,CryptoNewsDisplayActivity.class);
+        startActivity(intent);
     }
     private void logoutDialog() {
         SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE);
@@ -168,7 +149,7 @@ public class TrendingCoinActivity extends AppCompatActivity implements CoinsAdap
             public void onClick(SweetAlertDialog sweetAlertDialog) {
 
                 FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(TrendingCoinActivity.this, LandingPage.class);
+                Intent intent = new Intent(CryptoNewsActivity.this, LandingPage.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 sweetAlertDialog.cancel();
                 startActivity(intent);

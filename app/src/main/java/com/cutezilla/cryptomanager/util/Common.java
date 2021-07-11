@@ -8,6 +8,7 @@ import com.cutezilla.cryptomanager.model.Account;
 import com.cutezilla.cryptomanager.model.AllCoin;
 import com.cutezilla.cryptomanager.model.Ledger;
 import com.cutezilla.cryptomanager.model.LedgerEntry;
+import com.cutezilla.cryptomanager.model.StatusUpdate;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -45,6 +46,7 @@ public class Common {
     public static boolean isReversed;
     public static final String STR_NO_DATA = "Record not found";
     public static AllCoin SELECTED_COIN_DES;
+    public static StatusUpdate SELECTED_NEWS;
 
 
 
