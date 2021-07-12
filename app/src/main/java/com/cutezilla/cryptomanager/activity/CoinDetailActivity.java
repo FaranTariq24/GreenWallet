@@ -49,11 +49,16 @@ public class CoinDetailActivity extends AppCompatActivity {
     TextView tv_name,tb_symbol,tv_currentPrice,tv_totalVolume,tv_marketCapRank,tv_marketCap,tv_des;
     WebView simpleWebView;
     ImageView im_image;
+    SweetAlertDialog progressBar;
+    BaseActivity baseActivity;
     DecimalFormat formatter = new DecimalFormat("#,###,###");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coin_detail);
+
+        baseActivity = new BaseActivity();
+        progressBar = baseActivity.progressDialog(CoinDetailActivity.this, "Please wait", "Fetching data....");
         initLayout();
         headerComponents();
         updateLayout();
@@ -123,6 +128,7 @@ public class CoinDetailActivity extends AppCompatActivity {
                 public void onResponse(JSONObject response) {
                     CoinDetail cd = new Gson().fromJson(response.toString(), CoinDetail.class);
                     simpleWebView.loadDataWithBaseURL(null, cd.getDescription().getEn(), "text/html", "utf-8", null);
+                    progressBar.dismiss();
                 }
             }, new Response.ErrorListener() {
         @Override
