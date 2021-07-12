@@ -102,7 +102,7 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!email.getText().toString().equals("")) {
-                    FirebaseAuth.getInstance().sendPasswordResetEmail(email.getText().toString().trim())
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(email.getText().toString().trim().toLowerCase())
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {

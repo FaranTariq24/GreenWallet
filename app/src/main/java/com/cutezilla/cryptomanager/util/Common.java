@@ -24,6 +24,7 @@ public class Common {
 
     public static final String ConiFeckoGETLISTURL = "https://api.coingecko.com/api/v3/coins/list?include_platform=true";
     public static final String ConiFeckoGETVSCURRENCY = "https://api.coingecko.com/api/v3/simple/supported_vs_currencies";
+    public static  final String CURRENCYNAMESURL = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies.json";
 
     public static Account userAccount;
     public static final String LOGTRACE = "logtrace";
@@ -48,6 +49,8 @@ public class Common {
     public static AllCoin SELECTED_COIN_DES;
     public static StatusUpdate SELECTED_NEWS;
 
+    //--------->Setting
+    public static  int SET_SELECTED_CURRENCY=115;
 
 
 
