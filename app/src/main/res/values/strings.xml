@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Crypto wallet</string>
+    <string name="app_name">Green Wallet</string>
     <string name="title_activity_sign_in">SignInActivity</string>
     <string name="title_activity_main_activty">MainActivty</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

@@ -27,6 +27,8 @@ import com.cutezilla.cryptomanager.viewHolder.LedgerEntryViewHolder;
 import com.cutezilla.cryptomanager.viewHolder.LedgerViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -155,6 +157,7 @@ public class HistoryActivity extends AppCompatActivity {
     private void loadCardItem() {
         mainCardQuery = FirebaseDatabase.getInstance().getReference(Common.STR_LedgerEntry)
                 .orderByChild("ledger_id").equalTo(Common.SELECTED_CURRENCY);
+        loadStaticList(mainCardQuery);
 
 
         FR_options = new FirebaseRecyclerOptions.Builder<LedgerEntry>()
@@ -173,19 +176,43 @@ public class HistoryActivity extends AppCompatActivity {
 
             @SuppressLint("SetTextI18n")
             @Override
-            protected void onBindViewHolder(@NonNull LedgerEntryViewHolder holder, int i, @NonNull LedgerEntry ledgerEntry) {
+            protected void onBindViewHolder(@NonNull LedgerEntryViewHolder holder, int position, @NonNull LedgerEntry ledgerEntry) {
                 holder.setViewData(ledgerEntry);
-                Common.LEDG_ENTRY_LIST.add(ledgerEntry);
-//                if (ledgerEntry.getStatus().equals(Common.STR_BUY)){
-//                    tv_walletBalance.setText( String.valueOf(Float.parseFloat(tv_walletBalance.getText().toString())+ ledgerEntry.getCryptoAmount()));
-//                    tv_inv_amount.setText(String.valueOf(Float.parseFloat(tv_inv_amount.getText().toString())+ledgerEntry.getInvestedAmount()));
-//                }else{
-//                    float walletb = Float.parseFloat(tv_walletBalance.getText().toString())- ledgerEntry.getCryptoAmount();
-//                    tv_walletBalance.setText( String.valueOf(walletb));
-//                    tv_inv_amount.setText(String.valueOf(walletb*ledgerEntry.getPrice()));
-//                }
 
                 tv_crr_name.setText(ledgerEntry.getCurrency());
+
+                holder.iv_delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(HistoryActivity.this, SweetAlertDialog.WARNING_TYPE);
+                        sweetAlertDialog.setCanceledOnTouchOutside(false);
+                        sweetAlertDialog.setTitleText("Delete");
+                        sweetAlertDialog.setContentText("Are you sure you want to Delete?");
+                        sweetAlertDialog.setConfirmText("Yes");
+                        sweetAlertDialog.setCancelText("No");
+                        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.cancel();
+                            }
+                        });
+                        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                Toast.makeText(HistoryActivity.this,String.valueOf(ledgerEntry.getInvestedAmount()),Toast.LENGTH_SHORT).show();
+                                FR_adapter.getRef(position).removeValue();
+                                FR_adapter .notifyItemRemoved(position);
+                                FR_adapter .notifyDataSetChanged();
+                                updateLedger(sweetAlertDialog,ledgerEntry);
+                            }
+                        });
+
+                        sweetAlertDialog.show();
+
+
+                    }
+                });
+
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position) {
@@ -196,5 +223,53 @@ public class HistoryActivity extends AppCompatActivity {
         };
         FR_adapter.startListening();
         recyclerView.setAdapter(FR_adapter);
+    }
+    private void updateLedger(SweetAlertDialog sweetAlertDialog, LedgerEntry lbe){
+        Ledger updatedLedger = new Ledger();
+        for (Ledger ld: Common.LEDG_LIST){
+            if (ld.getLedgerEntry_id().equals(lbe.getLedger_id())){
+                if (lbe.getStatus().equals(Common.STR_BUY)){
+                    ld.setTotalCryptoAmount(ld.getTotalCryptoAmount()-lbe.getCryptoAmount());
+                    ld.setTotalInvested(ld.getTotalInvested()-lbe.getInvestedAmount());
+                }else if (lbe.getStatus().equals(Common.STR_SELL)){
+                    ld.setTotalCryptoAmount(ld.getTotalCryptoAmount()+lbe.getCryptoAmount());
+                    ld.setTotalInvested(ld.getTotalInvested()+lbe.getInvestedAmount());
+                }
+                updatedLedger = ld;
+            }
+        }
+        FirebaseDatabase.getInstance().getReference(Common.STR_Ledger)
+                .child(lbe.getLedger_id())
+                .setValue(updatedLedger)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(HistoryActivity.this,"Ledger updated",Toast.LENGTH_SHORT).show();
+                        sweetAlertDialog.dismiss();
+                        HistoryActivity.this.refreshActivity();
+                        HistoryActivity.this.finish();
+                    }
+                });
+    }
+    private void loadStaticList(Query mainCardQuery) {
+        mainCardQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull  DataSnapshot snapshot) {
+                assert Common.LEDG_ENTRY_LIST != null;
+                if (  Common.LEDG_ENTRY_LIST.size()>0){
+                    Common.LEDG_ENTRY_LIST.clear();
+                }
+
+                for (DataSnapshot snap: snapshot.getChildren()){
+                    Common.LEDG_ENTRY_LIST.add(snap.getValue(LedgerEntry.class));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull  DatabaseError error) {
+
+            }
+        });
     }
 }

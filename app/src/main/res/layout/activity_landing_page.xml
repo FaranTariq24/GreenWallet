@@ -47,7 +47,14 @@
             android:textColor="@android:color/white"
             android:background="@drawable/bg_btn_purple"
             android:layout_marginBottom="@dimen/space20"/>
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <TextView
+            android:id="@+id/tv_googleSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="The better way to live"
@@ -74,4 +81,5 @@
         android:textSize="@dimen/txt30"
         android:textStyle="bold"
         android:textColor="@android:color/white"/>
+
 </RelativeLayout>

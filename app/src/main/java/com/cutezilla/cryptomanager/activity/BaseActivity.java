@@ -40,10 +40,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     public void deleteLedgerEntry(Context ct, int id){
-        if (!Common.isReversed){
+
             Collections.reverse(Common.LEDG_ENTRY_LIST);
-            Common.isReversed = true;
-        }
+
         SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ct, SweetAlertDialog.WARNING_TYPE);
         sweetAlertDialog.setCanceledOnTouchOutside(false);
         sweetAlertDialog.setTitleText("Delete");

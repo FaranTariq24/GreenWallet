@@ -16,11 +16,16 @@ import com.cutezilla.cryptomanager.activity.BaseActivity;
 import com.cutezilla.cryptomanager.model.LedgerEntry;
 import com.cutezilla.cryptomanager.util.Common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
     ItemClickListener itemClickListener;
     View view;
-    TextView status,time,maxBuy,minBuy,totalCur,totalInvested,tv_buy_price,bbAt;
-    ImageView iv_delete;
+    public TextView status,time,maxBuy,minBuy,totalCur,totalInvested,tv_buy_price,bbAt;
+    public ImageView iv_delete;
+    List<LedgerEntry> ledgerEntryList = new ArrayList<>();
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
@@ -46,7 +51,8 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
             public void onClick(View v) {
 //                Toast.makeText(ct,String.valueOf(getAdapterPosition()),Toast.LENGTH_SHORT).show();
                 BaseActivity baseActivity = new BaseActivity();
-                baseActivity.deleteLedgerEntry(ct,getAdapterPosition());
+//                baseActivity.deleteLedgerEntry(ct,getAdapterPosition());
+
 
             }
         });
@@ -59,6 +65,7 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
 
     @SuppressLint({"SetTextI18n", "ResourceAsColor"})
     public void setViewData(LedgerEntry ledgerEntry) {
+        ledgerEntryList.add(ledgerEntry);
         status.setText(ledgerEntry.getStatus());
         time.setText(ledgerEntry.getDate());
         totalCur.setText(ledgerEntry.getCryptoAmount() +" " + ledgerEntry.getCurrency());
@@ -71,6 +78,13 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
             bbAt.setTextColor(Color.parseColor("#E53935"));
             totalCur.setTextColor(Color.parseColor("#E53935"));
             view.setBackgroundColor(Color.parseColor("#E53935"));
+        }else{
+            status.setTextColor(Color.parseColor("#388E3C"));
+            tv_buy_price.setTextColor(Color.parseColor("#66BB6A"));
+            bbAt.setTextColor(Color.parseColor("#66BB6A"));
+            bbAt.setText("Bought at: ");
+            totalCur.setTextColor(Color.parseColor("#66BB6A"));
+            view.setBackgroundColor(Color.parseColor("#43A047"));
         }
 
     }

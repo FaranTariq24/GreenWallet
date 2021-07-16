@@ -394,10 +394,10 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 Intent intent = new Intent(MainActivity.this,CryptoNewsActivity.class);
                 startActivity(intent);
             }
-            else if (id == R.id.nav_setting){
-                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
-                startActivity(intent);
-            }
+//            else if (id == R.id.nav_setting){
+//                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+//                startActivity(intent);
+//            }
 //            else if (id == R.id.nav_addCurrency) {
 //                showAddCurrencyPopup();
 //            }
