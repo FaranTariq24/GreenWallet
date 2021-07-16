@@ -3,8 +3,10 @@ package com.cutezilla.cryptomanager.activity;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -49,7 +51,12 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+import com.google.android.play.core.review.model.ReviewErrorCode;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -106,6 +113,8 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     DecimalFormat percentageFormatD = new DecimalFormat("00.00");
     SweetAlertDialog progressBar2;
     ImageView iv_history;
+    private ReviewManager reviewManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -236,6 +245,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
         queue.add(sr);
     }
     private void iniUiComponents() {
+        reviewManager = ReviewManagerFactory.create(this);
         tv_wl_am_pkr = (TextView) findViewById(R.id.tv_wl_am_pkr);
         tv_walletBalance = (TextView) findViewById(R.id.tv_walletBalance);
         baseActivity = new BaseActivity();
@@ -363,6 +373,31 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 
         return super.onOptionsItemSelected(item);
     }
+    public void redirectToPlayStore() {
+        final String appPackageName = getPackageName();
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+        } catch (ActivityNotFoundException exception) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+        }
+    }
+    private void showRateAppFallbackDialog() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.rate_app_title)
+                .setMessage(R.string.rate_app_message)
+                .setPositiveButton(R.string.rate_btn_pos, (dialog, which) -> redirectToPlayStore())
+                .setNegativeButton(R.string.rate_btn_neg,
+                        (dialog, which) -> {
+                            // take action when pressed not now
+                        })
+                .setNeutralButton(R.string.rate_btn_nut,
+                        (dialog, which) -> {
+                            // take action when pressed remind me later
+                        })
+                .setOnDismissListener(dialog -> {
+                })
+                .show();
+    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -393,6 +428,33 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
             else if (id == R.id.nav_crypto_news){
                 Intent intent = new Intent(MainActivity.this,CryptoNewsActivity.class);
                 startActivity(intent);
+            }
+            else if (id == R.id.nav_feedback){
+                final String appPackageName = getPackageName();
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (ActivityNotFoundException exception) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+//                com.google.android.play.core.tasks.Task<ReviewInfo> request = reviewManager.requestReviewFlow();
+//                request.addOnCompleteListener(task -> {
+//                    showRateAppFallbackDialog();
+//                    if (task.isSuccessful()) {
+//                        // We can get the ReviewInfo object
+//                        ReviewInfo reviewInfo = task.getResult();
+//
+//                        com.google.android.play.core.tasks.Task<Void> flow = reviewManager.launchReviewFlow(this, reviewInfo);
+//                        flow.addOnCompleteListener(task1 -> {
+//                            // The flow has finished. The API does not indicate whether the user
+//                            // reviewed or not, or even whether the review dialog was shown. Thus, no
+//                            // matter the result, we continue our app flow.
+//                        });
+//                    } else {
+//                        // There was some problem, continue regardless of the result.
+//                        // show native rate app dialog on error
+//                        showRateAppFallbackDialog();
+//                    }
+//                });
             }
 //            else if (id == R.id.nav_setting){
 //                Intent intent = new Intent(MainActivity.this,SettingActivity.class);

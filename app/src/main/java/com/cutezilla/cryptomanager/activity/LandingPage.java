@@ -53,6 +53,9 @@ public class LandingPage extends AppCompatActivity {
         setContentView(R.layout.activity_landing_page);
 
         baseActivity = new BaseActivity();
+        if (Build.VERSION.SDK_INT >= 21) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
         changeStatusBarColor();
         sign_btn = findViewById(R.id.sign_btn);
         //------------------------------SignIn----------------------------------------->
@@ -143,6 +146,7 @@ public class LandingPage extends AppCompatActivity {
                             .setValue(myUser).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            sweetAlertDialog.dismiss();
                             Intent intent = new Intent(LandingPage.this,MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
