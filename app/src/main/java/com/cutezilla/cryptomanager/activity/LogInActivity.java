@@ -45,6 +45,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class LogInActivity extends AppCompatActivity {
@@ -134,13 +136,14 @@ public class LogInActivity extends AppCompatActivity {
             GoogleSignInAccount account = task.getResult(ApiException.class);
             Toast.makeText(LogInActivity.this,"Signed In successfully",Toast.LENGTH_LONG).show();
             //SignIn successful now show authentication
+            assert account != null;
             firebaseGoogleAuth(account);
 
         } catch (ApiException e) {
             e.printStackTrace();
             Log.w("TAG", "signInResult:failed code=" + e.getStatusCode());
             Toast.makeText(LogInActivity.this,"SignIn Failed!!!",Toast.LENGTH_LONG).show();
-            firebaseGoogleAuth(null);
+//            firebaseGoogleAuth(null);
         }
     }
     private void firebaseGoogleAuth(GoogleSignInAccount account) {
@@ -151,11 +154,34 @@ public class LogInActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    Toast.makeText(LogInActivity.this,"successful",Toast.LENGTH_LONG).show();
                     FirebaseUser firebaseUser = mAuth.getCurrentUser();
 //                    UpdateUI(firebaseUser);
                     assert firebaseUser != null;
-                    Toast.makeText(LogInActivity.this,firebaseUser.getEmail(),Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(LandingPage.this,firebaseUser.getEmail(),Toast.LENGTH_SHORT).show();
+                    final SweetAlertDialog sweetAlertDialog = baseActivity.progressDialog(LogInActivity.this, "Please wait", "Request is processing...");
+                    sweetAlertDialog.show();
+                    Account myUser = new Account(
+                            firebaseUser.getDisplayName(),
+                            Objects.requireNonNull(firebaseUser.getEmail()).toLowerCase(),
+                            "male",
+                            "",
+                            "",
+                            "",
+                            "",
+                            ""
+
+                    );
+                    FirebaseDatabase.getInstance().getReference("accounts")
+                            .child(Common.removeSpecialCharacter(myUser.getEmail()))
+                            .setValue(myUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Intent intent = new Intent(LogInActivity.this,MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
                 }
                 else {
                     Toast.makeText(LogInActivity.this,"Failed!",Toast.LENGTH_LONG).show();
@@ -282,7 +308,7 @@ public class LogInActivity extends AppCompatActivity {
                         getUserData();
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
                     progressBar.cancel();
                     ll_login.setEnabled(true);
                 }
@@ -312,12 +338,12 @@ public class LogInActivity extends AppCompatActivity {
         if (mAuth.getCurrentUser() != null) {
             final SweetAlertDialog progressBarVerify = baseActivity.progressDialog(LogInActivity.this, "Please wait", "Checking email verification....");
             FirebaseDatabase.getInstance().getReference("account")
-                    .child(Common.removeSpecialCharacter(mAuth.getCurrentUser().getEmail()))
+                    .child(Common.removeSpecialCharacter(Objects.requireNonNull(mAuth.getCurrentUser().getEmail())))
                     .addListenerForSingleValueEvent(new ValueEventListener() {
 //                    .orderByChild("email")
 //                    .equalTo(mAuth.getCurrentUser().getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     progressBarVerify.cancel();
                     for (DataSnapshot accountDataSnapShot : dataSnapshot.getChildren()) {
                         myAccount = accountDataSnapShot.getValue(Account.class);
@@ -332,7 +358,7 @@ public class LogInActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
+                public void onCancelled(@NonNull DatabaseError databaseError) {
                     Toast.makeText(LogInActivity.this, "Failed to fetch", Toast.LENGTH_SHORT).show();
                     progressBarVerify.cancel();
                 }
