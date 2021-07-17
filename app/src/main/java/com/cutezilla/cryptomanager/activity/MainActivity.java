@@ -436,25 +436,11 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 } catch (ActivityNotFoundException exception) {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                 }
-//                com.google.android.play.core.tasks.Task<ReviewInfo> request = reviewManager.requestReviewFlow();
-//                request.addOnCompleteListener(task -> {
-//                    showRateAppFallbackDialog();
-//                    if (task.isSuccessful()) {
-//                        // We can get the ReviewInfo object
-//                        ReviewInfo reviewInfo = task.getResult();
-//
-//                        com.google.android.play.core.tasks.Task<Void> flow = reviewManager.launchReviewFlow(this, reviewInfo);
-//                        flow.addOnCompleteListener(task1 -> {
-//                            // The flow has finished. The API does not indicate whether the user
-//                            // reviewed or not, or even whether the review dialog was shown. Thus, no
-//                            // matter the result, we continue our app flow.
-//                        });
-//                    } else {
-//                        // There was some problem, continue regardless of the result.
-//                        // show native rate app dialog on error
-//                        showRateAppFallbackDialog();
-//                    }
-//                });
+
+            }
+            else if (id == R.id.nav_disclaimer){
+                Intent intent = new Intent(MainActivity.this,DisclaimerActivity.class);
+                startActivity(intent);
             }
 //            else if (id == R.id.nav_setting){
 //                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
