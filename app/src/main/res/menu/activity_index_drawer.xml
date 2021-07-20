@@ -37,21 +37,21 @@
                 android:id="@+id/nav_topTrending"
                 android:icon="@drawable/seven"
                 android:title="Top 7 trending coin" />
-            <item
+<!--            <item-->
 
-                android:id="@+id/nav_crypto_news"
-                android:icon="@drawable/news"
-                android:title="Coin news" />
+<!--                android:id="@+id/nav_crypto_news"-->
+<!--                android:icon="@drawable/news"-->
+<!--                android:title="Coin news" />-->
 
         </menu>
     </item>
     <item android:title="About App">
         <menu>
 
-            <item
-                android:id="@+id/nav_disclaimer"
-                android:icon="@drawable/ic_disclaimer"
-                android:title="Disclaimer" />
+<!--            <item-->
+<!--                android:id="@+id/nav_disclaimer"-->
+<!--                android:icon="@drawable/ic_disclaimer"-->
+<!--                android:title="Disclaimer" />-->
             <item
                 android:id="@+id/nav_feedback"
                 android:icon="@drawable/rating2"

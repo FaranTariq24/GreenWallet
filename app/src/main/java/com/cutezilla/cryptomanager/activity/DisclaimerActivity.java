@@ -26,11 +26,11 @@ public class DisclaimerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_disclaimer);
         disc = findViewById(R.id.disc);
 
-        disc.setText("All news, coin prices and other material is taken from website coingecko (www.coingecko.com).All material are used for noncommercial purposes. Any website materials without written permission of the authors (copyright holders) is prohibited. \n" +
+        disc.setText("All news, coin prices and other material is taken from website coingecko (www.coingecko.com) email (hello@coingecko.com).All material are used for noncommercial purposes. Any website materials without written permission of the authors (copyright holders) is prohibited. \n" +
                 "The Owners and developers of the mobile application are not responsible for any use of available on the mobile application materials. All materials are published for informational purposes only. All articles and hyperlinks published in the mobile app and on the website are purely for satisfying the interest of our dear readers; the owners and developers of the mobile application are not responsible for any consequences of the use of the materials for purposes designated illegal in countries around the world.\n" +
                 "\n" +
                 "Users bear their own responsibility for the use and spread of materials on the mobile application in accordance with the local legislation of their home country. The administration is not in possession of information on legislation of any country and does not track changes in legislation norms in various countries.\n");
-        Linkify.addLinks(disc, Linkify.WEB_URLS | Linkify.PHONE_NUMBERS);
+        Linkify.addLinks(disc, Linkify.WEB_URLS | Linkify.EMAIL_ADDRESSES);
           headerComponents();
     }
     private void headerComponents() {

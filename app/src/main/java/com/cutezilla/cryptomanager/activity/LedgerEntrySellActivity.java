@@ -78,8 +78,8 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
     private AppCompatButton bt_cancel,bt_submit;
     BaseActivity baseActivity;
     QueryService queryService = new QueryService();
-    DecimalFormat oneDFormat = new DecimalFormat("00.0");
-    DecimalFormat percentageFormat = new DecimalFormat("00.0000");
+    DecimalFormat oneDFormat = new DecimalFormat("0.0");
+    DecimalFormat percentageFormat = new DecimalFormat("0.00000000");
     Ledger selectedLedger;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -346,15 +346,40 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
             String read = Common.readFile(getApplicationContext());
             JSONArray coinArray = new JSONArray(read);
             for (int i = 0; i < coinArray.length(); i++) {
-                Coin coin = new Coin();
-                coin.setName(coinArray.getJSONObject(i).get("name").toString());
-                coin.setId(coinArray.getJSONObject(i).get("id").toString());
-                coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
-                coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString());
-                coinList.add(coin);
-
-
+                if (!Common.LEDG_LIST.isEmpty()){
+                    for (Ledger ld: Common.LEDG_LIST){
+                        if (ld.getCurrency_name().equals(coinArray.getJSONObject(i).get("symbol").toString().toUpperCase()+"/USD")){
+                            Coin coin = new Coin();
+                            coin.setName(coinArray.getJSONObject(i).get("name").toString());
+                            coin.setId(coinArray.getJSONObject(i).get("id").toString());
+                            coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
+                            coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString().toUpperCase()+"("+coinArray.getJSONObject(i).get("name").toString()+")");
+                            coinList.add(coin);
+                        }
+                    }
+                }
             }
+            if (Common.LEDG_LIST.isEmpty()) {
+                SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE);
+                sweetAlertDialog.setTitleText("No Data Found");
+                sweetAlertDialog.setContentText("Kindly buy something first");
+                sweetAlertDialog.setConfirmText("Ok");
+                sweetAlertDialog.setCanceledOnTouchOutside(false);
+                sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        Intent intent = new Intent(LedgerEntrySellActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        sweetAlertDialog.cancel();
+                        finish();
+
+                    }
+                });
+            sweetAlertDialog.show();
+            }
+
+
+
             ArrayAdapter<String> adp1 = new ArrayAdapter<String>(LedgerEntrySellActivity.this,
                     android.R.layout.simple_list_item_1, coinSymbolList);
             adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -363,10 +388,14 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    et_buyprice.setText("");
+                    et_investedamount.setText("");
                     tv_selectedcoin.setText(coinSymbolList.get(position));
-                    tv_coin_vr.setText(tv_selectedcoin.getText().toString().toUpperCase()+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
+                    String selected = tv_selectedcoin.getText().toString().split("\\(")[0];
+                    tv_coin_vr.setText(selected+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
                     if (!tv_selectedcoin.getText().toString().equals("") & !tv_selectedCurrency.getText().toString().equals("")){
-                        fetchMarketPrice(tv_selectedcoin.getText().toString(),tv_selectedCurrency.getText().toString());
+
+                        fetchMarketPrice(selected,tv_selectedCurrency.getText().toString());
                     }
                 }
 
@@ -377,7 +406,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
             });
             coinSpinner.setDialogTitle("Select currency");
             coinSpinner.setDismissText("Cancel");
-            coinSpinner.setSelection(3);
+//            coinSpinner.setSelection(3);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -408,7 +437,8 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                     tv_selectedCurrency.setText(vsCurrencyList.get(position));
-                                    tv_coin_vr.setText(tv_selectedcoin.getText().toString().toUpperCase()+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
+                                    String selected = tv_selectedcoin.getText().toString().split("\\(")[0];
+                                    tv_coin_vr.setText(selected+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
                                     if (!tv_selectedcoin.getText().toString().equals("") & !tv_selectedCurrency.getText().toString().equals("")){
                                         fetchMarketPrice(tv_selectedcoin.getText().toString(),tv_selectedCurrency.getText().toString());
                                     }
@@ -461,7 +491,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
         selectedCurrency = currency;
         Coin selectedCoin = new Coin();
         for (Coin co:coinList){
-            if (coin.equals(co.getSymbol())){
+            if (coin.equals(co.getSymbol().toUpperCase())){
                 selectedCoin = co;
                 selectedCoinId = co.getId();
             }
@@ -508,7 +538,7 @@ public class LedgerEntrySellActivity extends AppCompatActivity {
     }
     private void updateDollar(JSONObject jsonObject) throws JSONException {
         selectedLedger = null;
-        tv_selectedCurrencyPrice.setText( jsonObject.getJSONObject(selectedCoinId).get(selectedCurrency).toString());
+        tv_selectedCurrencyPrice.setText( percentageFormat.format(jsonObject.getJSONObject(selectedCoinId).get(selectedCurrency)));
         if (!Common.LEDG_LIST.isEmpty()){
             for (Ledger ld: Common.LEDG_LIST){
                 if (ld.getCurrency_name().equals(tv_coin_vr.getText().toString())){

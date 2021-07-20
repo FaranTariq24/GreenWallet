@@ -16,6 +16,7 @@ import com.cutezilla.cryptomanager.activity.BaseActivity;
 import com.cutezilla.cryptomanager.model.LedgerEntry;
 import com.cutezilla.cryptomanager.util.Common;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
     View view;
     public TextView status,time,maxBuy,minBuy,totalCur,totalInvested,tv_buy_price,bbAt;
     public ImageView iv_delete;
+    DecimalFormat format = new DecimalFormat("0.00000000");
     List<LedgerEntry> ledgerEntryList = new ArrayList<>();
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
@@ -70,7 +72,7 @@ public class LedgerEntryViewHolder extends RecyclerView.ViewHolder implements Vi
         time.setText(ledgerEntry.getDate());
         totalCur.setText(ledgerEntry.getCryptoAmount() +" " + ledgerEntry.getCurrency());
         totalInvested.setText(String.valueOf(ledgerEntry.getInvestedAmount())+"$");
-        tv_buy_price.setText(String.valueOf(ledgerEntry.getPrice()));
+        tv_buy_price.setText(format.format(ledgerEntry.getPrice()));
         if (ledgerEntry.getStatus().equals(Common.STR_SELL)){
             status.setTextColor(Color.parseColor("#E53935"));
             bbAt.setText("Sold at: ");

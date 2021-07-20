@@ -94,8 +94,13 @@ public class LandingPage extends AppCompatActivity {
         if (requestCode == RESULT_CODE_SINGIN) {        //just to verify the code
             //create a Task object and use GoogleSignInAccount from Intent and write a separate method to handle singIn Result.
 
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            GoogleSignInResult result =Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            assert result != null;
+            if (result.isSuccess()) {
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+                handleSignInResult(task);
+            }
+
         }
     }
     private void handleSignInResult(Task<GoogleSignInAccount> task) {
@@ -120,6 +125,8 @@ public class LandingPage extends AppCompatActivity {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         //here we are checking the Authentication Credential and checking the task is successful or not and display the message
         //based on that.
+
+        //----------------------------------------------------------------------------------------------------------------------->
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -159,6 +166,8 @@ public class LandingPage extends AppCompatActivity {
                 }
             }
         });
+
+        //----------------------------------------------------------------------------------------------------------------------->
     }
 
     /**

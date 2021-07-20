@@ -63,7 +63,7 @@ public class LogInActivity extends AppCompatActivity {
     private SignInButton sign_btn;
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth m2Auth;
-    private int RESULT_CODE_SINGIN=999;
+    private int RESULT_CODE_SINGIN=88;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

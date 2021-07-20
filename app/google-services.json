@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1025501930256",
+    "firebase_url": "https://cryptowallet-954af-default-rtdb.firebaseio.com",
     "project_id": "cryptowallet-954af",
     "storage_bucket": "cryptowallet-954af.appspot.com"
   },
@@ -22,7 +23,7 @@
           }
         },
         {
-          "client_id": "1025501930256-gp7vut9e1g4e67iibs7ddd300c10md1h.apps.googleusercontent.com",
+          "client_id": "1025501930256-059663ertfpvauc61babs5eq32ejbg85.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1025501930256-gp7vut9e1g4e67iibs7ddd300c10md1h.apps.googleusercontent.com",
+              "client_id": "1025501930256-059663ertfpvauc61babs5eq32ejbg85.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

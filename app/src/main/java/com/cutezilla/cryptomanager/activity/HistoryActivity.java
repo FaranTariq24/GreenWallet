@@ -199,7 +199,7 @@ public class HistoryActivity extends AppCompatActivity {
                         sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                Toast.makeText(HistoryActivity.this,String.valueOf(ledgerEntry.getInvestedAmount()),Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(HistoryActivity.this,String.valueOf(ledgerEntry.getInvestedAmount()),Toast.LENGTH_SHORT).show();
                                 FR_adapter.getRef(position).removeValue();
                                 FR_adapter .notifyItemRemoved(position);
                                 FR_adapter .notifyDataSetChanged();

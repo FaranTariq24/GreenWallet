@@ -1,6 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'  // Google Services plugin
 android {
+    signingConfigs {
+        debug {
+            storeFile file('D:\\work\\Crypto\\keystorepath.jks')
+            storePassword '123456'
+            keyAlias 'faran'
+            keyPassword '123456'
+        }
+        release {
+        }
+    }
     compileSdkVersion 30
 
     defaultConfig {
@@ -8,15 +18,15 @@ android {
         applicationId "com.cutezilla.cryptomanager"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 3
-        versionName "1.0.3"
+        versionCode 6
+        versionName "1.0.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 //        android.useAndroidX=true
 //        android.enableJetifier=true
     }
-//
+    //
 //    buildTypes {
 //        release {
 //            minifyEnabled false

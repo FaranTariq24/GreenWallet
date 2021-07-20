@@ -136,6 +136,7 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="@dimen/txt16" />
                 <com.google.android.gms.common.SignInButton
+                    android:visibility="gone"
                     android:id="@+id/sign_btn"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"

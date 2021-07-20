@@ -76,6 +76,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
     private AppCompatButton bt_cancel,bt_submit;
     BaseActivity baseActivity;
     DecimalFormat percentageFormat = new DecimalFormat("00.0000");
+    DecimalFormat percentageFormat2 = new DecimalFormat("00.00000000");
     QueryService queryService = new QueryService();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,7 +301,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
                 coin.setName(coinArray.getJSONObject(i).get("name").toString());
                 coin.setId(coinArray.getJSONObject(i).get("id").toString());
                 coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
-                coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString());
+                coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString().toUpperCase()+"("+coinArray.getJSONObject(i).get("name").toString()+")");
                 coinList.add(coin);
 
 
@@ -314,9 +315,10 @@ public class LedgerEntryActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     tv_selectedcoin.setText(coinSymbolList.get(position));
-                    tv_coin_vr.setText(tv_selectedcoin.getText().toString().toUpperCase()+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
+                    String selected = tv_selectedcoin.getText().toString().split("\\(")[0];
+                    tv_coin_vr.setText(selected+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
                     if (!tv_selectedcoin.getText().toString().equals("") & !tv_selectedCurrency.getText().toString().equals("")){
-                        fetchMarketPrice(tv_selectedcoin.getText().toString(),tv_selectedCurrency.getText().toString());
+                        fetchMarketPrice(selected,tv_selectedCurrency.getText().toString());
                     }
                 }
 
@@ -327,7 +329,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
             });
             coinSpinner.setDialogTitle("Select currency");
             coinSpinner.setDismissText("Cancel");
-            coinSpinner.setSelection(3);
+//            coinSpinner.setSelection(3);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -359,7 +361,8 @@ public class LedgerEntryActivity extends AppCompatActivity {
                                 @Override
                                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                     tv_selectedCurrency.setText(vsCurrencyList.get(position));
-                                    tv_coin_vr.setText(tv_selectedcoin.getText().toString().toUpperCase()+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
+                                    String selected = tv_selectedcoin.getText().toString().split("\\(")[0];
+                                    tv_coin_vr.setText(selected+"/"+tv_selectedCurrency.getText().toString().toUpperCase());
                                     if (!tv_selectedcoin.getText().toString().equals("") & !tv_selectedCurrency.getText().toString().equals("")){
                                         fetchMarketPrice(tv_selectedcoin.getText().toString(),tv_selectedCurrency.getText().toString());
                                     }
@@ -410,7 +413,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
         selectedCurrency = currency;
         Coin selectedCoin = new Coin();
         for (Coin co:coinList){
-            if (coin.equals(co.getSymbol())){
+            if (coin.equals(co.getSymbol().toUpperCase())){
                 selectedCoin = co;
                 selectedCoinId = co.getId();
             }
@@ -456,7 +459,7 @@ public class LedgerEntryActivity extends AppCompatActivity {
 
     }
     private void updateDollar(JSONObject jsonObject) throws JSONException {
-        tv_selectedCurrencyPrice.setText( jsonObject.getJSONObject(selectedCoinId).get(selectedCurrency).toString());
+        tv_selectedCurrencyPrice.setText(percentageFormat2.format(jsonObject.getJSONObject(selectedCoinId).get(selectedCurrency)) );
         progressBar.dismiss();
     }
     private void dialogDatePickerLight(final Button bt) {

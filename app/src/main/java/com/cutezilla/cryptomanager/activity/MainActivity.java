@@ -40,6 +40,7 @@ import com.android.volley.toolbox.Volley;
 import com.cutezilla.cryptomanager.Interface.ItemClickListener;
 import com.cutezilla.cryptomanager.R;
 import com.cutezilla.cryptomanager.model.Account;
+import com.cutezilla.cryptomanager.model.AllCoin;
 import com.cutezilla.cryptomanager.model.Coin;
 import com.cutezilla.cryptomanager.model.Currency;
 import com.cutezilla.cryptomanager.model.Ledger;
@@ -67,6 +68,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 
@@ -190,8 +192,7 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
     // Common.writefile(new Gson().toJson(coinList),getApplicationContext());
     private void fetchLocalCurrency(){
         ltv_loading.setVisibility(View.VISIBLE);
-         List<Coin> coinList= new ArrayList<>();
-         List<String> coinSymbolList = new ArrayList<>();
+
         RequestQueue queue= Volley.newRequestQueue(getApplicationContext());
         StringRequest sr = new StringRequest(Request.Method.GET, Common.ConiFeckoGETLISTURL,
                 new Response.Listener<String>() {
@@ -200,24 +201,27 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
 //                        Log.e("HttpClient", "success! response: " + response.toString());
 //                        Log.i("VOLLEY", response);
                         try {
-                            JSONArray coinArray = new JSONArray(response);
-                            for (int i = 0; i < coinArray.length(); i++) {
-                                Coin coin = new Coin();
-                                coin.setName(coinArray.getJSONObject(i).get("name").toString());
-                                coin.setId(coinArray.getJSONObject(i).get("id").toString());
-                                coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
-                                if (coinArray.getJSONObject(i).getJSONObject("platforms").has("binance-smart-chain")
-                                        || coinArray.getJSONObject(i).getJSONObject("platforms").has("binancecoin")
-                                        || coinArray.getJSONObject(i).get("symbol").equals("btc")){
-                                    coinSymbolList.add(coinArray.getJSONObject(i).get("symbol").toString());
-                                    coinList.add(coin);
-                                }
+//                            JSONArray coinArray = new JSONArray(response);
+                            List<Coin> coinList = new Gson().fromJson(response.toString(), new TypeToken<List<Coin>>() {
+                            }.getType());
 
 
-                            }
+//                            for (int i = 0; i < coinArray.length(); i++) {
+//                                Coin coin = new Coin();
+//                                coin.setName(coinArray.getJSONObject(i).get("name").toString());
+//                                coin.setId(coinArray.getJSONObject(i).get("id").toString());
+//                                coin.setSymbol(coinArray.getJSONObject(i).get("symbol").toString());
+//                                if (coinArray.getJSONObject(i).getJSONObject("platforms").has("binance-smart-chain")
+//                                        || coinArray.getJSONObject(i).getJSONObject("platforms").has("binancecoin")
+//                                        || coinArray.getJSONObject(i).get("symbol").equals("btc")){
+//                                    coinList.add(coin);
+//                                }
+//
+//
+//                            }
                             Common.writefile(new Gson().toJson(coinList),getApplicationContext());
                             progressBar2.dismiss();
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -425,10 +429,6 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 Intent intent = new Intent(MainActivity.this,TrendingCoinActivity.class);
                 startActivity(intent);
             }
-            else if (id == R.id.nav_crypto_news){
-                Intent intent = new Intent(MainActivity.this,CryptoNewsActivity.class);
-                startActivity(intent);
-            }
             else if (id == R.id.nav_feedback){
                 final String appPackageName = getPackageName();
                 try {
@@ -438,10 +438,15 @@ public class MainActivity extends AppCompatActivity   implements NavigationView.
                 }
 
             }
-            else if (id == R.id.nav_disclaimer){
-                Intent intent = new Intent(MainActivity.this,DisclaimerActivity.class);
-                startActivity(intent);
-            }
+//            else if (id == R.id.nav_crypto_news){
+//                Intent intent = new Intent(MainActivity.this,CryptoNewsActivity.class);
+//                startActivity(intent);
+//            }
+
+//            else if (id == R.id.nav_disclaimer){
+//                Intent intent = new Intent(MainActivity.this,DisclaimerActivity.class);
+//                startActivity(intent);
+//            }
 //            else if (id == R.id.nav_setting){
 //                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
 //                startActivity(intent);
